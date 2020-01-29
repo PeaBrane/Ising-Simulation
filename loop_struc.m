@@ -5,7 +5,11 @@ W = zeros(n,m);
 Wpos = ones(n1,m1);
 Wneg = ones(n1,m1);
 
-alpha = floor(3*frus/(1-frus)*scale);
+if frus == 0.25
+    alpha = scale - 1;
+else
+    alpha = floor(3*frus/(1-frus)*scale);
+end
 
 loop = 0;
 while loop < nl1
@@ -59,8 +63,8 @@ end
 
 loop = 0;
 while loop < nl3
-    
-h0 = mysample(1:m1);
+
+h0 = ceil(rand()*m1);
 vneg = find(Wneg(:,h0).');
 v0 = mysample(vneg);
 if v0 == 0
@@ -70,7 +74,7 @@ end
 v1 = mysample(n1+1:n);
 h1 = mysample(m1+1:m);
 
-W(v0,h0) = W(v0,h0) - alpha; Wpos(v0,h0) = 0;
+W(v0,h0) = W(v0,h0) - alpha;
 W(v0,h1) = W(v0,h1) + scale;
 W(v1,h0) = W(v1,h0) + scale; 
 W(v1,h1) = W(v1,h1) + scale; 

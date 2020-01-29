@@ -1,4 +1,4 @@
-function T = get_time_gibbs(n,m,a,b,w,n_monte,beta,E,t_cap,dev)
+function T = SA_time(n,m,a,b,w,n_monte,beta,E,t_cap,dev)
 
 t = Inf; T = 0;
 while t == Inf

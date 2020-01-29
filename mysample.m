@@ -2,11 +2,11 @@ function ele = mysample(list)
 
 l = length(list);
 
-if l < 1
-    ele = 0;
-else
+if l
     i = ceil(l*rand());
     ele = list(i);
+else
+    ele = 0;
 end
 
 end

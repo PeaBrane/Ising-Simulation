@@ -1,4 +1,4 @@
-function [w,v,h,E,cost] = gen_abW(n,m,scale,n_loops,loop_ratio,vers,frus,sz)
+function [w,E,cost] = generate(n,m,scale,n_loops,loop_ratio,vers,frus,sz)
 
 nl1 = ceil(n_loops/(2+loop_ratio));
 nl2 = ceil(n_loops/(2+loop_ratio));
@@ -21,7 +21,8 @@ else
 end
 
 E = sum(W(:));
-[v,h,w] = gauge(n,m,W);
+% [v,h,w] = gauge(n,m,W);
+w = W;
 cost = (sum(abs(W(:))) - E)/2;
 
 end

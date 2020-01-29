@@ -1,13 +1,15 @@
 clear all;
 
-n = 20;
-m = 20;
+n = 40;
+m = 40;
 scale = 100;
-n_loops = 100;
-loop_ratio = Inf;
-vers = 0;
-frus = 0.24;
-sz = 0.5;
+frus = 0.22;
+n_loops = 800;
 
-[w,v,h,E,cost] = gen_abW(n,m,scale,n_loops,loop_ratio,vers,frus,sz);
-v*w*h.'
+boolist = zeros(1,200);
+for iter = 1:200
+W = loop_rand(n,m,scale,frus,n_loops);
+v = ones(1,n); h = ones(1,m);
+boolist = sum(W(:)) == v*W*h.';
+end
+all(boolist)
