@@ -1,0 +1,30 @@
+function time_list = myread(n_list,vers_list,sz_list,frus_list,density_list,runs)
+
+n_length = length(n_list);
+vers_length = length(vers_list);
+sz_length = length(sz_list);
+frus_length = length(frus_list);
+density_length = length(density_list);
+list = {density_list, frus_list, sz_list, vers_list, n_list};
+
+siz = [runs density_length frus_length sz_length vers_length n_length];
+z = find(siz ~= 1); 
+if ismember(length(sz), z)
+
+siz = siz(z); dim = length(siz);
+tot = prod(siz);
+time_list = zeros(1,tot);
+
+for tot_iter = 1:tot 
+sub = myind2sub(siz, tot_iter);
+fn = blanks(0);
+for d = dim:-1:2
+    l = list{z(d)-1}; 
+    i = sub(d); 
+    var = l(i);
+    fn = strcat(fn , num2str(var) , '-');
+end
+fn = fn(1:end-1); fn = strcat(fn , '.mat');  
+end
+
+end

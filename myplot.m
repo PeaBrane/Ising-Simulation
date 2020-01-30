@@ -9,15 +9,15 @@ end
 
 if dim == 2
     
-time_est = prctile(time_list, perc, 2);
+time_est = prctile(time_list, perc, 1);
 plot(ind_list, time_est);
 
 elseif dim == 3
 
-sz1 = siz(1);
-time_est = prctile(time_list, perc, 3);
-for szi = 1:sz1
-plot(ind_list, time_est(szi,:));
+sz1 = siz(1); sz2 = siz(2); sz3 = siz(3);
+time_est = reshape(prctile(time_list, perc, 1), [sz2 sz3]);
+for szi = 1:sz3
+plot(ind_list, time_est(:,szi).');
 hold on;
 end
 

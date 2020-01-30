@@ -40,6 +40,6 @@ end
 end
 
 siz(siz == 1) = [];
-time_list = reshape(time_list,flip(siz)); 
+time_list = reshape(time_list,siz); 
 
 end

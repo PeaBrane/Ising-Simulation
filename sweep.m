@@ -1,7 +1,7 @@
 function [E_best,t] = sweep(n,m,a,b,W,n_monte,beta_list,E_sol,dev)
 
 n_monte = floor(n_monte);
-
+    
 v = rand_spins(n);
 h = rand_spins(m);
 E = a*v.' + b*h.' + v*W*h.'; E_best = E;
