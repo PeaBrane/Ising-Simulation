@@ -4,7 +4,6 @@ This repository contains MATLAB implementations of standard algorithms for gener
 
 Note that the correctness of the implementation of cluster update solver and parallel tempering is not yet guaranteed.
 
-
 **The generation of RBM instances:**
 https://arxiv.org/abs/1905.05334
 
@@ -14,3 +13,5 @@ https://journals.aps.org/pre/abstract/10.1103/PhysRevE.97.043303
 
 **Parallel tempering with isogenic cluster move:**
 https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.115.077201
+
+The examples should provide a rough guideline of how to use the codes.
