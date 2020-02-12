@@ -1,6 +1,9 @@
+% This example compares the hardness scaling behaviors of the random and
+% structured loop algorithms.
+
 clear;
-rng(0)
-addpath(genpath('cnf'),genpath('display'),genpath('generators'),genpath('parallel'),genpath('solvers'),genpath('utils'));
+rng(0);
+addpath(genpath('..'));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%% Parameters for Generation %%%%%

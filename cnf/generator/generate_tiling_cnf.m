@@ -1,6 +1,7 @@
-function generate_tiling_cnf(n,m,k,flist,runs)
+function generate_tiling_cnf(sz,flist,runs)
 % generates wcnf files for a given class of instances
 
+n = sz(1); m = sz(2); k = sz(3);
 dirname = cnf_dirname([n m k], str2num(sprintf('%d', flist)));
 mkdir(dirname);   
 
