@@ -4,7 +4,7 @@ This repository contains MATLAB implementations of standard algorithms for gener
 
 The examples serve as a rough guideline on using the codes. Note that the correctness of the implementation of cluster update solver and parallel tempering is not yet guaranteed.
 
-Email: yrpei@ucsd.edu
+**Email**: yrpei@ucsd.edu
 
 **The generation of RBM instances:**
 https://arxiv.org/abs/1905.05334
