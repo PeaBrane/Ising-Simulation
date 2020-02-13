@@ -3,7 +3,7 @@ function solve_parallel(folder,workers,runs,dev,cap,scale,loop_ratio,varlist,bet
 % if exist(folder, 'dir')
 %     rmdir(folder, 's');
 % end
-% mkdir(folder);
+mkdir(folder);
 
 ins = round(runs/workers);
 
