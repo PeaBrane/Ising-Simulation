@@ -1,14 +1,17 @@
-function T = SA_time(n,m,a,b,w,n_monte,beta,E,t_cap,dev)
+function tsol = SA_time(beta,Esol,W,T,t0,dev)
 
-t = Inf; T = 0;
+n = size(W,1); m = size(W,2);
+a = zeros(1,n); b = zeros(1,m);
+
+t = Inf; tsol = 0;
 while t == Inf
-    [~,t] = sweep_rbm(n,m,a,b,w,n_monte,beta,E,dev);
+    [~,t] = sweep_rbm(n,m,a,b,W,t0,beta,Esol,dev);
     if t == Inf
-        T = T + n_monte;
+        tsol = tsol + t0;
     else
-        T = T + t;
+        tsol = tsol + t;
     end
-    if T > t_cap
+    if tsol > T
         break;
     end
 end

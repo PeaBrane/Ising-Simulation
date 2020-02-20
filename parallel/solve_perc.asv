@@ -1,0 +1,38 @@
+function solve_perc(folder,runs,workers,varlist,scale,cloop,bsmart,T,dev)
+
+% if exist(folder, 'dir')
+%     rmdir(folder, 's');
+% end
+mkdir(folder);
+
+ins = round(runs/workers);
+
+siz = cellfun(@length, varlist);
+tot = prod(siz);
+[~,vl] = collapse(varlist);
+
+parfor ii = 1:tot*workers
+    
+vars = get_vars(varlist,iter);
+fn = get_fn(vl,iter);
+fn = strcat(folder,fn);
+
+rho = vars(1); frus = vars(2); sz = vars(3); vers = vars(4);
+n = vars(5); m = vars(5);
+
+betapara = betalist(n, rho, scale, bsmart);
+a = zeros(1,n); b = zeros(1,m);
+
+if ~isfile(fn)
+tlist = zeros(1,runs);
+[w,E] = generate(n,m,scale,n_loops,loop_ratio,vers,frus,sz);
+n_monte = (0.504*n^2 - 13.3*n + 311)*...
+          (193*frus^3 - 52.7*frus^2 + 4.73*frus - 0.102);
+tlist(in) = SA_time(n,m,a,b,w,n_monte,beta,E,10^cap,dev);
+end
+parsave(fn,tlist);
+end
+
+end
+
+end

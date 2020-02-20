@@ -1,10 +1,11 @@
-function [w,E,cost] = generate(n,m,scale,n_loops,loop_ratio,vers,frus,sz)
+function [w,E,cost] = rbmloops(n,m,scale,rho,cloops,vers,frus,sz)
 % generate an (n x m) RBM instance
 
-nl1 = ceil(n_loops/(2+loop_ratio)); % number of left loops
-nl2 = ceil(n_loops/(2+loop_ratio)); % number of upper loops
-nl3 = ceil(n_loops*loop_ratio/(2+loop_ratio)); % number of center loops
-if loop_ratio == Inf
+n_loops = ceil(n*rho);
+nl1 = ceil(n_loops/(2+cloops)); % number of left loops
+nl2 = ceil(n_loops/(2+cloops)); % number of upper loops
+nl3 = ceil(n_loops*cloops/(2+cloops)); % number of center loops
+if cloops == Inf
     nl1 = 0; nl2 = 0;
     nl3 = n_loops;
 end

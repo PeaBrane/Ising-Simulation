@@ -1,4 +1,4 @@
-function myplot(ind_list, time_list, perc, f_log, legendcell)
+function myplot(ind_list, time_list, perc, f_log, labels, legendcell)
 
 cmap = cbrewer('qual','Set2',8,'PCHIP');
 colormap(cmap);
@@ -30,13 +30,13 @@ elseif dim == 3
 
 sz1 = siz(1); sz2 = siz(2); sz3 = siz(3);
 
-for szi = 1:sz3
-for szj = 1:sz2
-if any( time_list(:,szj,szi) == 0 , 'all' )
-    time_list(:,szj,szi) = zeros(sz1,1);
-end 
-end
-end
+% for szi = 1:sz3
+% for szj = 1:sz2
+% if any( time_list(:,szj,szi) == 0 , 'all' )
+%     time_list(:,szj,szi) = zeros(sz1,1);
+% end 
+% end
+% end
 
 time_med = reshape(prctile(time_list, perc2, 1), [sz2 sz3]);
 time_low = reshape(prctile(time_list, perc1, 1), [sz2 sz3]);
@@ -53,12 +53,13 @@ pl = [pl p];
 hold on;
 end
 hold off;
+
 legend(pl,legendcell,'fontsize',14);
 
 end
 
-xlabel('Loop Density', 'fontweight', 'bold', 'fontsize', 14);
-ylabel('Total No. of Sweeps', 'fontweight', 'bold', 'fontsize', 14);
+xlabel(labels{1}, 'fontweight', 'bold', 'fontsize', 14);
+ylabel(labels{2}, 'fontweight', 'bold', 'fontsize', 14);
 grid on;
 grid minor;
 if f_log

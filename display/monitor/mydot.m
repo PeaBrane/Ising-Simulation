@@ -1,7 +1,11 @@
-function mydot(run,runs)
+function mydot(t,t0,dt,flag)
 
-if floor(run/runs*100) > floor((run-1)/runs*100)
-    fprintf('.');
+if floor(t/t0*100) > floor((t-dt)/t0*100)
+    if flag
+        fprintf('.');
+    else
+        fprintf('x');
+    end
 end
 
 end

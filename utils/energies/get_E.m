@@ -1,18 +1,13 @@
-function [V,field,E] = get_E(v,W)
+function [V,field,lfield,E,C] = get_E(v,W)
 
-dim = length(size(v));
-V = get_V(v);
+sz = size(v); d = length(sz);
+V = get_V(v); 
+lfield = W.*V; 
+C = 0.5*(1-lfield.*repmat(v, [ones(1,d) 2*d]));
 
 v0 = sign(v); V0 = sign(V);
-
-if dim == 2
-field = sum(W.*V0,3);
-elseif dim == 3
-field = sum(W.*V0,4);
-else
-    fprintf('Error');
-end
-
+% v0 = randround(v); V0 = get_V(v0);
+field = sum(W.*V0,d+1);
 E2 = field.*v0;
 E = sum(E2(:))/2;
 

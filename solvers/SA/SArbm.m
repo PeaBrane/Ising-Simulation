@@ -1,4 +1,4 @@
-function [E_best,t] = sweep_rbm(n,m,a,b,W,n_monte,beta_list,E_sol,dev)
+function [Ebest,t] = SArbm(betapara,t0,W,Esol,dev)
 % performs an SA run on an (n x m) RBM
 % n_monte is the number of sweeps per run
 % beta_list is the inverse temperature schedule
@@ -8,28 +8,27 @@ function [E_best,t] = sweep_rbm(n,m,a,b,W,n_monte,beta_list,E_sol,dev)
 % t is the total number of sweeps performed until the optimum is found
 % t=Inf if the optimum is not found
 
-t = Inf;
-n_monte = floor(n_monte);
-beta_min = beta_list(1); beta_max = beta_list(2);
+n = size(W,1); m = size(W,2);
+betalist = linspace(betapara(1),betapara(2),t0);
     
 v = -1 + 2*round(rand(1,n)); % initializes the visible spins randomly
 h = -1 + 2*round(rand(1,m)); % initializes the hidden spins randomly
-E = a*v.' + b*h.' + v*W*h.'; % gets current energy
-E_best = E; % records best energy
-theta = v*W + b; % evaluates theta angles
+E = v*W*h.'; % gets current energy
+Ebest = E; % records best energy
+theta = v*W; % evaluates theta angles
 
 % assumes that all weights are integer
 if dev
-    eng_dev = E_sol*dev;
+    eng_dev = Esol*dev;
 else
     eng_dev = 0.01;
 end
 
 % performs n_monte number of sweeps
-for monte = 1:n_monte    
+for t = 1:t0
     
     % updates the inverse temperature
-    beta = beta_min + (monte-1)/(n_monte-1)*(beta_max - beta_min); 
+    beta = betalist(t);
     
     % sweeps over the hidden layer and updates the phi angles
     ratio = exp(-2*beta*theta.*h);
@@ -44,14 +43,13 @@ for monte = 1:n_monte
     theta = v*W;
     
     % updates the energy
-    E = a*v.' + b*h.' + v*W*h.';
+    E = v*W*h.';
     
     % records the best energy found so far and checks against the optimum
     % terminates the run if the optimum is found
-    if E >= E_best
-        E_best = E;
-        if abs(E-E_sol) <= eng_dev
-            t = monte;
+    if E >= Ebest
+        Ebest = E;
+        if abs(E-Esol) <= eng_dev
             break;
         end
     end

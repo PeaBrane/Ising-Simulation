@@ -1,4 +1,4 @@
-function w = gauge(w)
+function [w,v] = gauge_lattice(w)
 
 sz = size(w); sz = sz(1:end-1);
 dim = length(sz);

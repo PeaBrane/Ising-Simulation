@@ -1,4 +1,4 @@
-function fn = get_fn(list,iter,work)
+function fn = get_fn(list,iter,worker)
 
 vars = get_vars(list,iter);
 dim = length(vars);
@@ -10,7 +10,7 @@ for d = dim:-1:1
 end
 
 fn = fn(1:end-1);
-fn = strcat(fn,'-',num2str(work));
+fn = strcat(fn,'-',num2str(worker));
 fn = strcat(fn,'.mat');
 
 end
