@@ -1,0 +1,20 @@
+function greyplot(v,fsave)
+
+N = size(v,3);
+n = ceil(N/5);
+m = 5;
+
+fig = figure(1);
+h = subaxis(n, m, iax, 'sh', 0.03, 'sv', 0.01, 'padding', 0, 'margin', 0);
+for Ni = 1:N
+vi = v(:,:,Ni);
+I = mat2gray(vi,[min(vi(:)) max(vi(:))]);
+subplot(n,m,Ni);
+imshow(I);
+end
+
+if fsave
+    saveas(fig,'plots.png');
+end
+
+end

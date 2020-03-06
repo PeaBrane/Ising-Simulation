@@ -23,6 +23,8 @@ else
 end
 
 end
+mydot(iter,tot,1,1);
+end
 
 timelist = reshape(timelist, [runs sz]);
 

@@ -1,4 +1,4 @@
-function myplot(ind_list, time_list, perc, f_log, labels, legendcell)
+function myplot(ind_list, time_list, perc, f_log, tit, labels, legendcell)
 
 cmap = cbrewer('qual','Set2',8,'PCHIP');
 colormap(cmap);
@@ -30,13 +30,13 @@ elseif dim == 3
 
 sz1 = siz(1); sz2 = siz(2); sz3 = siz(3);
 
-% for szi = 1:sz3
-% for szj = 1:sz2
-% if any( time_list(:,szj,szi) == 0 , 'all' )
-%     time_list(:,szj,szi) = zeros(sz1,1);
-% end 
-% end
-% end
+for szi = 1:sz3
+for szj = 1:sz2
+if any( time_list(:,szj,szi) == 0 , 'all' )
+    time_list(:,szj,szi) = zeros(sz1,1);
+end 
+end
+end
 
 time_med = reshape(prctile(time_list, perc2, 1), [sz2 sz3]);
 time_low = reshape(prctile(time_list, perc1, 1), [sz2 sz3]);
@@ -45,23 +45,32 @@ time_hi = reshape(prctile(time_list, perc3, 1), [sz2 sz3]);
 pl = [];
 for szi = 1:sz3
 f = fill([ind_list flip(ind_list)], [time_low(:,szi).' flip(time_hi(:,szi).')], cmap(szi,:), 'linestyle', 'none');
-set(f,'facealpha',0.2);
+set(f,'facealpha',0.3);
 hold on;
-p = plot(ind_list, time_med(:,szi).', 'color', cmap(szi,:), 'marker', '.', 'markersize', 18, ...
+p = plot(ind_list, time_med(:,szi).', 'color', cmap(szi,:), 'marker', '.', 'markersize', 12, ...
     'linewidth', 2);
 pl = [pl p];
 hold on;
 end
 hold off;
 
-legend(pl,legendcell,'fontsize',14);
+if legendcell
+legend(pl,legendcell,'fontsize',14,'interpreter','latex');
+end
 
 end
 
-xlabel(labels{1}, 'fontweight', 'bold', 'fontsize', 14);
-ylabel(labels{2}, 'fontweight', 'bold', 'fontsize', 14);
+if tit
+title(tit, 'fontsize', 18, 'interpreter', 'latex');
+end
+if labels
+xlabel(labels{1}, 'fontweight', 'bold', 'fontsize', 16);
+ylabel(labels{2}, 'fontweight', 'bold', 'fontsize', 16);
+end
+ylim([1 max(time_hi(:))*2]);
 grid on;
 grid minor;
+legend boxoff;
 if f_log
 set(gca,'XScale','log','fontsize',12);
 set(gca,'YScale','log','fontsize',12);
