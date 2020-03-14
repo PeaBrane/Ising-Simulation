@@ -20,7 +20,7 @@ time_low = reshape(prctile(time_list, perc1, 1), [1 sz]);
 time_hi = reshape(prctile(time_list, perc3, 1), [1 sz]);
 
 f = fill([ind_list flip(ind_list)], [time_low flip(time_hi)], cmap(1,:), 'linestyle', 'none');
-set(f,'facealpha',0.2);
+set(f,'facealpha',0.4);
 hold on;
 plot(ind_list, time_med, 'color', cmap(1,:), 'marker', '.', 'markersize', 18, ...
     'linewidth', 2);
@@ -44,33 +44,40 @@ time_hi = reshape(prctile(time_list, perc3, 1), [sz2 sz3]);
 
 pl = [];
 for szi = 1:sz3
-f = fill([ind_list flip(ind_list)], [time_low(:,szi).' flip(time_hi(:,szi).')], cmap(szi,:), 'linestyle', 'none');
-set(f,'facealpha',0.3);
-hold on;
-p = plot(ind_list, time_med(:,szi).', 'color', cmap(szi,:), 'marker', '.', 'markersize', 12, ...
-    'linewidth', 2);
-pl = [pl p];
-hold on;
+    
+if szi == 1
+    c = [0.5 0.5 0.5];
+else
+    c = cmap(szi-1,:);
 end
-hold off;
+  
+    f = fill([ind_list flip(ind_list)], [time_low(:,szi).' flip(time_hi(:,szi).')], c, 'linestyle', 'none');
+    set(f,'facealpha',0.4);
+    hold on;
+    p = plot(ind_list, time_med(:,szi).', 'color', brighten(c,-0.3), 'marker', '.', 'markersize', 12, ...
+        'linewidth', 2);
+    pl = [pl p];
+    hold on;
 
-if legendcell
+end
+
+if ~isempty(legendcell)
 legend(pl,legendcell,'fontsize',14,'interpreter','latex');
 end
 
 end
 
-if tit
+if ~isempty(tit)
 title(tit, 'fontsize', 18, 'interpreter', 'latex');
 end
-if labels
+if ~isempty(labels)
 xlabel(labels{1}, 'fontweight', 'bold', 'fontsize', 16);
 ylabel(labels{2}, 'fontweight', 'bold', 'fontsize', 16);
 end
 ylim([1 max(time_hi(:))*2]);
 grid on;
 grid minor;
-legend boxoff;
+% legend boxoff;
 if f_log
 set(gca,'XScale','log','fontsize',12);
 set(gca,'YScale','log','fontsize',12);
