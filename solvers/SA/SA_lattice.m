@@ -1,21 +1,22 @@
-function [Ebest, t] = SA_lattice(betapara,Esol,W,T,quiet)
-
-sz = size(W); sz = sz(1:end-1); N = prod(sz);
-
-t = 10*N;
-restarts = ceil(T/t);
-sz = size(W); sz = sz(1:end-1);
-
-betalist = linspace(betapara(1),betapara(2),t);
+function [Ebest, t] = SA_lattice(betapara,t0,Esol,W,T,quiet)
 
 flag = 0;
-Ebest = 0;
+if t0 < 1 || t0 > T
+    Ebest = -Esol;
+    t = T;
+    return;
+end
+
+sz = size(W); sz = sz(1:end-1); N = prod(sz);
+restarts = ceil(T/t0);
+
+betalist = linspace(betapara(1),betapara(2),t0);
 
 for restart = 1:restarts
 v = -1+2*round(rand(sz));
 [~,field,~,E,~] = get_E(v,W);
 
-for dt = 1:t
+for dt = 1:t0
     
 beta = betalist(dt);
 [v, field, E] = sweep_lattice(v,W,field,E,beta);
@@ -29,7 +30,7 @@ if E > Ebest
 end
     
 if ~quiet
-mydot((restart-1)*t+dt,restarts*t,1,1);
+mydot((restart-1)*t0+dt,restarts*t0,1,1);
 end
     
 end
@@ -40,6 +41,6 @@ end
 
 end
 
-t = (restart-1)*t + dt;
+t = (restart-1)*t0 + dt;
 
 end

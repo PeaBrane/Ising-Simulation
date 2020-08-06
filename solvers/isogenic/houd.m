@@ -1,8 +1,7 @@
 function [v1,v2] = houd(v1,v2)
 
-n = size(v1,1);  
-m = size(v1,2); 
-k = size(v1,3);
+sz = size(v1);
+n = sz(1); m = sz(2); k = sz(3);
 N = n*m*k;
 
 differ = v1 ~= v2;
@@ -22,8 +21,7 @@ if length(list) > ceil(N/2)
     list = cluster(differ);
     if list == 0
         return;
-    end
-    
+    end   
 end
 
 v1(list) = -v1(list);
