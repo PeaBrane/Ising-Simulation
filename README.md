@@ -1,8 +1,10 @@
 # Ising-Simulation
 
-This repository contains MATLAB implementations of standard algorithms for generating and solving Ising spin glass instances. Besides the generation of RBM instances, I take no credit for the invention of these algorithms. 
+This repository contains MATLAB implementations of standard algorithms for generating and simulating/solving Ising spin glass instances. The examples serve as a rough guideline on using the codes. 
 
-The examples serve as a rough guideline on using the codes. Note that the correctness of the implementation of cluster update solver and parallel tempering is not yet guaranteed.
+The generation algorithms include the frustrated loop instances and the 3D tiling cube instances. The simulation algorithms include single spin-flip updates, cluster updates (wolff and kbd), and replica exchange methods.
+
+Other than the generation of RBM instances, I take no credit for the invention of these algorithms.
 
 **Email**: yrpei@ucsd.edu
 
@@ -12,6 +14,5 @@ https://arxiv.org/abs/1905.05334
 **The generation of tiling instances:**
 https://journals.aps.org/pre/abstract/10.1103/PhysRevE.97.043303
 
-
-**Parallel tempering with isogenic cluster move:**
+**Parallel tempering with isoenergetic cluster move:**
 https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.115.077201
