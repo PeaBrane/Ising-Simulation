@@ -6,6 +6,7 @@ if d == 2
 elseif d == 3
     [w,Esol] = tiling_3d(sz(1),sz(2),sz(3),flist); 
 end
+
 w = gauge_lattice(w);
 W = get_W(w);
 

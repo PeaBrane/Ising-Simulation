@@ -12,7 +12,7 @@ vlist = -1+2*round(rand([sz nr]));
 Elist = zeros(1,nr);
 field = zeros([sz nr]);
 for r = 1:nr
-[~,field(:,:,:,r),~,Elist(r),~] = get_E(vlist(:,:,:,r),W);
+[~,field(:,:,:,r),~,Elist(r),~] = get_E(vlist(:,:,:,r),W,W,false);
 end
 
 for t = 1:T

@@ -23,7 +23,7 @@ field = zeros([sz 2 nr]);
 
 for c = 1:2
 for r = 1:nr
-[~,field(:,:,:,c,r),~,Elist(c,r),~] = get_E(vlist(:,:,:,c,r),W);
+[~,field(:,:,:,c,r),~,Elist(c,r),~] = get_E(vlist(:,:,:,c,r),W,W,false);
 end
 end
 
@@ -41,8 +41,8 @@ for t = 1:T
     for beta = betahigh
     r1 = find(betalist(rlist(1,:)) == beta); r2 = find(betalist(rlist(2,:)) == beta);
     [vlist(:,:,:,1,r1),vlist(:,:,:,2,r2)] = houd(vlist(:,:,:,1,r1),vlist(:,:,:,2,r2));
-    [~,field(:,:,:,1,r1),~,Elist(1,r1),~] = get_E(vlist(:,:,:,1,r1),W);
-    [~,field(:,:,:,2,r2),~,Elist(2,r2),~] = get_E(vlist(:,:,:,2,r2),W);
+    [~,field(:,:,:,1,r1),~,Elist(1,r1),~] = get_E(vlist(:,:,:,1,r1),W,W,false);
+    [~,field(:,:,:,2,r2),~,Elist(2,r2),~] = get_E(vlist(:,:,:,2,r2),W,W,false);
     end
     
     % parallel tempering

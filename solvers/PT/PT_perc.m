@@ -8,7 +8,7 @@ tlist = zeros(1,runs);
 vlist = zeros([sz 2 nr runs]);
 rlist = zeros([2 nr runs]);
 
-flag = 0; restarts = 100;
+flag = 0; restarts = ceil(2^35/T);
 runcap = min(ceil(runs*perc/100)+1, runs);
 unsol = 1:runs;
 

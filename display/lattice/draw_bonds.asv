@@ -1,15 +1,12 @@
 function draw_bonds(spins,w)
 
-sz = size(w); l = sz(end); d = sz(end); sz = sz(1:end-1);
-if l == 2*d
-    w = get_ww(w);
-end
+sz = size(w); d = sz(end); sz = sz(1:end-1);
 
 if d == 2
 
 n = size(w,1); m = size(w,2);
-cmap = zeros(n*m,3);
-indices = reshape(1:n*m,[n m]);
+cmap = zeros(n*m,2);
+indices = reshape(1:2*prod(sz),[n m 2]);
 
 for i = 1:n
 for j = 1:m
@@ -37,9 +34,13 @@ end
 end
 
 hold on;
-x = reshape(repmat(1:n,[m 1]),[1 n*m]);
-y = repmat(1:m,[1 n]);
-scatter(x,y,25,cmap,'filled');
+
+y = repmat(
+
+x = reshape(repmat(1:n,[m*k 1]),[1 n*m*k]);
+y = repmat(reshape(repmat(1:m,[k 1]),[1 m*k]),[1 n]);
+z = repmat(1:k,[1 n*m]);
+scatter3(x,y,z,25,cmap,'filled');
 set(gca,'visible','off');
     
 elseif d == 3    

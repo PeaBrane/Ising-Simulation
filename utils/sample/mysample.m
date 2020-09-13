@@ -3,7 +3,6 @@ function ele = mysample(list)
 % returns 0 if the list is empty
 
 l = length(list);
-
 if l
     i = ceil(l*rand());
     ele = list(i);

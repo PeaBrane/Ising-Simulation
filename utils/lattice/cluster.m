@@ -1,16 +1,17 @@
 function list = cluster(v)
 
-n = size(v,1);
-m = size(v,2);
-k = size(v,3);
-
-clist = find(v);
-c = mysample(clist);
-[i,j,l] = ind2sub([n m k], c);
-c = sub2ind([3*n 3*m 3*k],n+i,m+j,k+l);
+sz = size(v);
+n = sz(1); m = sz(2); k = sz(3); 
 N = n*m*k;
 
-V = repmat(v, [3 3 3]);
+clist = find(v); c = mysample(clist);
+if ~c list = 0; return; end
+
+[i,j,l] = ind2sub([n m k], c);
+c = sub2ind([2*n 2*m 2*k],i,j,l);
+
+z = zeros(sz);
+V = cat(3, [v v; v z], [v z; z z]);
 pixels = bwconncomp(V,6);
 pixels = pixels.PixelIdxList;
 
@@ -18,9 +19,7 @@ if isempty(pixels)
     list = 0;
     return;
 end
-
-np = length(pixels);
-for p = 1:np
+for p = 1:length(pixels)
     if ismember(c,pixels{p})
         break;
     end
@@ -28,7 +27,7 @@ end
 list = pixels{p};
 
 indices = reshape(1:N, [n m k]);
-indices = repmat(indices, [3 3 3]);
+indices = repmat(indices, [2 2 2]);
 list = indices(list);
 list = unique(list);
 

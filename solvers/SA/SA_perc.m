@@ -1,38 +1,50 @@
-function tlist = SA_perc(betapara,t0,fSDP,Esol,Wlist,T,perc)
+function tlist = SA_perc(betapara,t0,sz,flist,fRBM,fwolff,runs,T,perc)
 
-sz = size(Wlist); runs = sz(end);
-sz = sz(1:end-2); d = length(sz);
+d = length(sz);
+if ~fRBM
+[Wlist,Esol] = tiling_ensemble(sz,flist,runs);
+Esol = repmat(Esol,[1 runs]);
+else
+[Wlist,Esol] = rbm_ensemble(sz,flist,runs);
+end
 
+flag = 0; restarts = ceil(2^26/T);
+runcap = min(ceil(runs*perc/100)+1, runs);
+unsol = 1:runs;
 tlist = zeros(1,runs);
 
-solved = zeros(1,runs);
-runcap = min(ceil(runs*perc/100)+1, runs);
+for restart = 1:restarts
+ins = length(unsol);  
+temp = zeros(1,ins);
+Elist = zeros(1,ins);
 
-for restart = 1:100
-Elist = zeros(1,runs);
-list = zeros(1,runs);
-parfor run = 1:runs
-
-if d == 2
+parfor in = 1:ins
+run = unsol(in);
+if fRBM
+W = Wlist(:,:,run);
+elseif d == 2
 W = Wlist(:,:,:,run);
 elseif d == 3
 W = Wlist(:,:,:,:,run);
 end
-
-if ~solved(run)
-[Elist(run),list(run)] ...
-= SA_lattice(betapara,t0,fSDP,Esol,W,T,1);
+[Elist(in),temp(in)] = SA(betapara,t0,Esol(in),W,fRBM,fwolff,T,1);
 end
 
+list = zeros(1,runs); list(unsol) = temp; tlist = tlist + list;
+for in = ins:-1:1
+if Elist(in) == Esol(in)
+unsol(in) = []; Esol(in) = [];
 end
-
-tlist = tlist + list;
-solved = solved + (Elist == Esol);
-counter = sum(solved);
-if counter >= runcap
+end
+if runs-length(unsol) >= runcap
+    flag = 1;
     break;
 end
 end
-tlist(~solved) = Inf;
+if flag
+tlist(unsol) = Inf;
+else
+tlist = Inf;
+end
 
 end

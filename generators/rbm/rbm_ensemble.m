@@ -1,11 +1,10 @@
-function [Wlist,Elist] = rbm_ensemble(n,m,scale,rho,cloops,vers,frus,sz,runs)
-% generate an (n x m) RBM instance
+function [Wlist,Elist] = rbm_ensemble(sz,flist,runs)
 
-Wlist = zeros(n,m,runs); Elist = zeros(1,runs);
-for run = 1:runs
-    [W,Esol,~] = rbmloops(n,m,scale,rho,cloops,vers,frus,sz);
-    Wlist(:,:,run) = W;
-    Elist(run) = Esol;
+Wlist = []; Elist = [];
+for run = 1:runs 
+[W,Esol,~] = rbmloops(sz(1),sz(2),100,sz(3),1,0,flist,0.5);
+Wlist = cat(3,Wlist,W);
+Elist = [Elist Esol];
 end
 
 end

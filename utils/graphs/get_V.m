@@ -1,7 +1,6 @@
 function V = get_V(v)
 
-sz = size(v);
-d = length(sz);
+sz = size(v); d = length(sz);
 
 if d == 2
 
