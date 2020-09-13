@@ -11,7 +11,7 @@ if t0 < 1 || t0 > T
 end
 
 if ~fRBM
-sz = size(W); sz = sz(1:end-1); N = prod(sz);
+sz = size(W); sz = sz(1:end-1);
 else
 sz = size(W); n = sz(1); m = sz(2); w = W/max(abs(W(:)));
 end

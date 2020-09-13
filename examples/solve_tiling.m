@@ -1,28 +1,30 @@
-% This example generates a tiling instance and tries to solve it with SA.
+% This example generates a tiling instance and tries to solve it with
+% simulated annealing.
 
 clear;
 addpath(genpath('..'));
 
 % Tiling Parameters
-n = 6; 
-m = 6; 
-k = 6;
-flist = [0 0 0 0 1];
-N = n*m*k;
+sz = [6 6 6]; % 6x6x6 3D lattice
+N = prod(sz);
+flist = [0 0 0 0 1]; % tiling parameters
+fRBM = false; % non-RBM structure
+fwolff = false; % no wolff updates
+fkbd = false; % no KBD updates
+quiet = false;
 
 % SA Parameters
-beta_list = [0.01 log(N)]; % inverse temperature schedule
-T = 10^7;
-t = 10^5;
+beta = [0.01 log(N)]; % inverse temperature schedule
+T = 2^15; % total simulation time
+t0 = 10; % restart after 2^10 sweeps
 
 fprintf('Generating instance...');
 fprintf('\n');
-[w,Esol,cost] = tiling_3d(n,m,k,flist); % generates instance
-w = gauge_lattice(w); % gauges instance
+[W,Esol] = tiling(sz,flist); % generates instance
 
 % solves instance and
-% returns best energy found as 'Ebest', and TTS as 'tot'
+% returns best energy found as 'Ebest', and TTS as 't'
 fprintf('Solving instance');
-[tot,Ebest] = SA_lattice(Esol,w,beta_list,T,t);
+[t,Ebest] = SA(beta,t0,Esol,W,fRBM,fwolff,fkbd,T,quiet);
 fprintf('\n');
-fprintf(strcat('TTS: ', num2str(tot), ' sweeps'));
+fprintf(strcat('TTS: ', num2str(t), ' sweeps'));
