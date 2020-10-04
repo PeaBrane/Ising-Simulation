@@ -1,4 +1,4 @@
-function tlist = SA_perc(betapara,t0,sz,flist,fRBM,fwolff,runs,T,perc)
+function tlist = SA_perc(betapara,t0,sz,flist,fRBM,falgo,runs,T,perc)
 
 d = length(sz);
 if ~fRBM
@@ -8,10 +8,11 @@ else
 [Wlist,Esol] = rbm_ensemble(sz,flist,runs);
 end
 
-flag = 0; restarts = ceil(2^26/T);
+tlist = zeros(1,runs);
+
+flag = 0; restarts = ceil(2^35/T);
 runcap = min(ceil(runs*perc/100)+1, runs);
 unsol = 1:runs;
-tlist = zeros(1,runs);
 
 for restart = 1:restarts
 ins = length(unsol);  
@@ -20,20 +21,19 @@ Elist = zeros(1,ins);
 
 parfor in = 1:ins
 run = unsol(in);
-if fRBM
-W = Wlist(:,:,run);
-elseif d == 2
+if d == 2
 W = Wlist(:,:,:,run);
 elseif d == 3
 W = Wlist(:,:,:,:,run);
 end
-[Elist(in),temp(in)] = SA(betapara,t0,Esol(in),W,fRBM,fwolff,T,1);
+[Elist(in),temp(in),~] = SA(betapara,t0,Esol(in),W,fRBM,falgo,T,1);
 end
 
-list = zeros(1,runs); list(unsol) = temp; tlist = tlist + list;
+list = zeros(1,runs); list(unsol) = temp;
+tlist = tlist + list;
 for in = ins:-1:1
-if Elist(in) == Esol(in)
-unsol(in) = []; Esol(in) = [];
+if Elist(in) == Esol
+Esol(in) = []; unsol(in) = [];
 end
 end
 if runs-length(unsol) >= runcap

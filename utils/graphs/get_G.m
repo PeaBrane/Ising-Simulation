@@ -10,7 +10,11 @@ if d == 2
     s = reshape([indices;indices],[1 2*N]); t = reshape([indices1;indices2],[1 2*N]);
     ind = ~reshape(permute(w,[3 1 2]),[1 2*N]);
     s(ind) = []; t(ind) = []; 
-    G = graph(s,t);
+    G = graph(s,t); 
+    dn = N-height(G.Nodes);
+    if dn
+    G = addnode(G,dn);
+    end
     
 elseif d == 3
     
@@ -19,7 +23,11 @@ elseif d == 3
     s = reshape([indices;indices;indices],[1 3*N]); t = reshape([indices1;indices2;indices3],[1 3*N]);
     ind = ~reshape(permute(w,[4 1 2 3]),[1 3*N]);
     s(ind) = []; t(ind) = []; 
-    G = graph(s,t);
+    G = graph(s,t); 
+    dn = N-height(G.Nodes);
+    if dn
+    G = addnode(G,dn);
+    end
     
 else
     fprintf('Error');

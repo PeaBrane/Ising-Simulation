@@ -1,17 +1,48 @@
-function Ediff = SA_mul(betapara,t0,sz,flist,fRBM,runs,T,quiet)
+function [Nlist,betalist,normsz,Ediff,lap,clus] = SA_mul(betapara,nr,npara,flist,runs,T,tw,fRBM,falgo,monitor)
 
-Ediff = zeros(1,runs);
+betalist = geoseries(betapara(1),betapara(2),nr); bl = length(betalist);
+nmk = get_nmk(npara(1),npara(2));
+Nlist = prod(nmk,2).';
+ins = size(nmk,1);
+
+quiet = monitor(1); record = monitor(2); fsave = monitor(3);
+Ediff = zeros(runs,T-tw,bl,ins);
+lap = zeros(runs,T-tw,bl,ins);
+normsz = cell(1,ins); clus = cell(1,ins);
+
+if falgo(3)
+algo = 'KBD';
+elseif falgo(2)
+algo = 'Wolff';
+elseif falgo(1)
+algo = 'SA';
+end
+
+for in = 1:ins
+sz = nmk(in,:); N = prod(sz);
+normsz{in} = (1:N)/N;
+cl = zeros(runs,N);
+
 parfor run = 1:runs
-if ~fRBM
 [W,Esol] = tiling(sz,flist);  
-else
-[W,Esol,~] = rbmloops(sz(1),sz(2),100,sz(3),1,0,flist,0.5);
+[~,~,state] = SA(betapara,nr,Esol,W,T,tw,fRBM,falgo,[1 record 0]);
+Ediff(run,:,:,in) = state.E; 
+lap(run,:,:,in) = state.lap;
+cl(run,:) = state.clus(:,:,1);
 end
-[E,~] = SA(betapara,t0,Esol,W,fRBM,T,1);
-Ediff(run) = Esol - E;
+clus{in} = normalize(mean(cl,1),2,'norm',1);
+
 if ~quiet
-   mydot(run,runs,1,1);
+fprintf('\n');
+fprintf(strcat(algo,': '));
+fprintf(num2str(sz));
 end
 end
+
+lap = reshape(mean(lap,1),[1 (T-tw) bl ins]);
+Ediff = mean(reshape(Ediff,[runs*(T-tw) bl ins]),1);
+if fsave
+save(strcat(algo,'_mul.mat'),'Nlist','betalist','normsz','Ediff','lap','clus');
+end   
 
 end

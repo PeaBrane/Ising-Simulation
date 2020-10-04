@@ -1,4 +1,4 @@
-function [list,clus] = kbd(v,W,beta,g,check)
+function [list,b,bg] = kbd(v,W,beta,g,check)
 
 w = get_ww(W); sz = size(w); w = get_frus(v,w);
 n = sz(1); m = sz(2);
@@ -13,15 +13,6 @@ alist = repmat(alist,[1 1 4]); blist = repmat(blist,[1 1 4]); clist = repmat(cli
 wp = alist.*(wp1+wp3) + blist.*(wp2+wp1+clist.*(wp3-wp1));
 w = wp_to_w(wp,check,0);
 
-G = get_G(w);
-[bins,binsizes] = conncomp(G);
-if isempty(binsizes)
-    list = 0; clus = 0;
-    return;
-end
-cdf = to_cdf(binsizes);
-bin = cdf_sample(cdf);
-list = find(bins == bin);
-clus = length(list)/prod(sz(1:end-1));
+[list,b,bg] = get_bclus(w,false);
 
 end
