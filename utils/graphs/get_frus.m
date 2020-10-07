@@ -1,8 +1,11 @@
 function w = get_frus(v,w)
 
-d = length(size(w))-1;
+sz = size(w); d = length(sz)-1;
 
-if d == 2
+if d == 1
+    n = sz(1);
+    w = (v(1:n).'*v(n+1:end)).*w;
+elseif d == 2
     v1 = circshift(v,-1,1);
     v2 = circshift(v,-1,2);
     w = repmat(v,[1 1 2]).*cat(3,v1,v2).*w;

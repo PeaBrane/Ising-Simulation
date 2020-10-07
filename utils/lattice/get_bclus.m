@@ -1,6 +1,12 @@
 function [list,b,bg] = get_bclus(w,sw)
 
-sz = size(w); N = prod(sz(1:end-1));
+sz = size(w); 
+if sz == 2
+N = sum(sz);
+else
+N = prod(sz(1:end-1));
+end
+
 w = logical(floor( w + rand(sz) ));
 G = get_G(w);
 [idx,bsz] = conncomp(G);

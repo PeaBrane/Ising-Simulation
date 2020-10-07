@@ -1,4 +1,4 @@
-function tlist = SA_perc(betapara,t0,sz,flist,fRBM,falgo,runs,T,perc)
+function tlist = SA_perc(betapara,nr,sz,flist,fRBM,falgo,runs,T,perc)
 
 d = length(sz);
 if ~fRBM
@@ -26,7 +26,7 @@ W = Wlist(:,:,:,run);
 elseif d == 3
 W = Wlist(:,:,:,:,run);
 end
-[Elist(in),temp(in),~] = SA(betapara,t0,Esol(in),W,fRBM,falgo,T,1);
+[Elist(in),temp(in),~] = SA(betapara,nr,Esol(in),W,T,Inf,fRBM,falgo,[1 0 0]);
 end
 
 list = zeros(1,runs); list(unsol) = temp;

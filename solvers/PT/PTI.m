@@ -1,4 +1,4 @@
-function [Ebest,t,vlist,rlist,state] = PTI(betapara,nr,Esol,W,T,tw,vlist,rlist,monitor)
+function [Ebest,t,conf,state] = PTI(betapara,nr,Esol,W,T,tw,conf,monitor)
 
 sz = size(W); sz = sz(1:end-1); N = prod(sz);
 betalist = geoseries(betapara(1),betapara(2),nr); bl = length(betalist);
@@ -6,31 +6,40 @@ betahigh = betalist(find(betalist > 1,1,'first'):end); bhl = length(betahigh);
 Ebest = 0;
 
 % initialization
-if (isempty(vlist) && isempty(rlist)) || (~any(vlist,'all') && ~any(rlist,'all'))
-rlist = [1:nr; 1:nr];
+if isempty(conf)
 vlist = -1+2*round(rand([sz 2 nr]));
+rlist = [1:nr; 1:nr];
+else
+vlist = conf{1};
+rlist = conf{2};
 end
 Elist = zeros(2,nr);
 field = zeros([sz 2 nr]);
 for c = 1:2
 for r = 1:nr
-[~,field(:,:,:,c,r),~,Elist(c,r),~] = get_E(vlist(:,:,:,c,r),W,W,false);
+[~,field(:,:,:,c,r),~,Elist(c,r),~] = get_E(vlist(:,:,:,c,r),W,false);
 end
 end
 
 quiet = monitor(1); record = monitor(2);
+if record
+tlist = unique(round(geoseries(1,(T-tw),10*round(log2(T-tw))))); recs = length(tlist);
 state = struct;
-state.E = zeros(1,T-tw,2,bl);
-state.lap = zeros(1,T-tw,2,bl);
+state.E = zeros(1,2,bl);
+state.lap = zeros(1,recs,2,bl);
 state.clus = zeros([1 N bhl]);
+else
+state = 0;
+end
 
+rec = 0;
 for t = 1:T
     
     % sweep
     for c = 1:2
     for r = 1:nr
     ir = rlist(c,r);
-    [vlist(:,:,:,c,r), field(:,:,:,c,r), Elist(c,r)] = sweep_lattice(vlist(:,:,:,c,r), W, field(:,:,:,c,r), Elist(c,r), betalist(ir));
+    [vlist(:,:,:,c,r), field(:,:,:,c,r), Elist(c,r)] = sweep(vlist(:,:,:,c,r), W, field(:,:,:,c,r), Elist(c,r), betalist(ir),false);
     end
     end
     
@@ -39,8 +48,8 @@ for t = 1:T
     beta = betahigh(bhi);
     r1 = find(betalist(rlist(1,:)) == beta); r2 = find(betalist(rlist(2,:)) == beta);
     [vlist(:,:,:,1,r1),vlist(:,:,:,2,r2),b,bg] = houd(vlist(:,:,:,1,r1),vlist(:,:,:,2,r2));
-    [~,field(:,:,:,1,r1),~,Elist(1,r1),~] = get_E(vlist(:,:,:,1,r1),W,W,false);
-    [~,field(:,:,:,2,r2),~,Elist(2,r2),~] = get_E(vlist(:,:,:,2,r2),W,W,false);
+    [~,field(:,:,:,1,r1),~,Elist(1,r1),~] = get_E(vlist(:,:,:,1,r1),W,false);
+    [~,field(:,:,:,2,r2),~,Elist(2,r2),~] = get_E(vlist(:,:,:,2,r2),W,false);
     if sum(b) && (t>tw)
     state.clus(1,bg,bhi) = state.clus(1,bg,bhi) + b;
     end
@@ -59,13 +68,20 @@ for t = 1:T
     end
     
     % recording
+    if record
     if t == tw
         v0 = vlist;
     end
     if t > tw
     for c = 1:2
-        state.lap(1,t-tw,c,rlist(c,:)) = reshape(sum(v0(:,:,:,c,:).*vlist(:,:,:,c,:),[1 2 3]),[1 1 1 bl])/N;
-        state.E(1,t-tw,c,rlist(c,:)) = reshape((Esol-Elist(c,:))/Esol,[1 1 1 bl])/N;
+    state.E(1,c,rlist(c,:)) = state.E(1,c,rlist(c,:)) + reshape((Esol-Elist(c,:))/Esol,[1 1 bl])/N;
+    end
+    if ismember(t-tw,tlist)
+    rec = rec+1;
+    for c = 1:2
+    state.lap(1,rec,c,rlist(c,:)) = reshape(sum(v0(:,:,:,c,:).*vlist(:,:,:,c,:),[1 2 3]),[1 1 1 bl])/N;
+    end
+    end
     end
     end
     
@@ -83,4 +99,8 @@ for t = 1:T
         mydot(t,T,1,1);
     end
 end
+if record
+state.E = state.E/(T-tw);
+end
+conf{1} = vlist; conf{2} = rlist;
 end

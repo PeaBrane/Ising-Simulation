@@ -1,4 +1,21 @@
-function [v,field,E] = sweep_lattice(v,W,field,E,beta)
+function [v,field,E] = sweep(v,W,field,E,beta,fRBM)
+
+if fRBM
+    sz = size(W); n = sz(1); m = sz(2);
+    h = v(n+1:end); v = v(1:n);
+    ratio = -2*beta*field(n+1:end).*h;
+    indices = ratio > log(rand([1 m]));
+    h(indices) = -h(indices);
+    field(1:n) = (W*h.').';
+    E = v*W*h.';
+    ratio = -2*beta*field(1:n).*v;
+    indices = ratio > log(rand([1 n]));
+    v(indices) = -v(indices);
+    field(n+1:end) = v*W;
+    E = max([E v*W*h.']);   
+    v = [v h];
+    return;
+end
 
 d = length(size(v));
 

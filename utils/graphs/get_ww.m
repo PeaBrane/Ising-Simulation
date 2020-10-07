@@ -1,11 +1,13 @@
 function w = get_ww(W)
 
 sz = size(W);
-dim = length(sz)-1;
+d = length(sz)-1;
 
-if dim == 2
+if d == 1
+w = W;
+elseif d == 2
 w = W(:,:,[2 4]);
-elseif dim == 3
+elseif d == 3
 w = W(:,:,:,[2 4 6]);
 else   
     fprintf('Error');

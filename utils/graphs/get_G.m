@@ -1,6 +1,21 @@
 function G = get_G(w)
 
-sz = size(w); sz = sz(1:end-1); d = length(sz);
+sz = size(w); 
+if length(sz) == 2
+   
+    n = sz(1); m = sz(2);
+    ind = find(w).';
+    s = mod(ind-1,n)+1; t = fix((ind-1)./n)+1+n;
+    G = graph(s,t);
+    dn = (n+m)-height(G.Nodes);
+    if dn
+    G = addnode(G,dn);
+    end
+    return;
+    
+end
+
+sz = sz(1:end-1); d = length(sz);
 N = prod(sz);
 
 if d == 2

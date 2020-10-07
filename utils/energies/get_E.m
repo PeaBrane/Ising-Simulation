@@ -1,4 +1,4 @@
-function [V,field,lfield,E,C] = get_E(v,w,W,fRBM)
+function [V,field,lfield,E,C] = get_E(v,W,fRBM)
 
 if ~fRBM
 sz = size(v); d = length(sz);
@@ -16,9 +16,9 @@ else
 V = 0; lfield = 0;
 sz = size(W); n = sz(1); m = sz(2);
 vv = v(1:n); hh = v(n+1:n+m);
-field = [(w*hh.').' vv*w];
+field = [(W*hh.').' vv*W];
 E = sign(vv)*W*sign(hh.');
-C = (vv.'*hh).*w;
+C = (vv.'*hh).*W;
     
 end
 
