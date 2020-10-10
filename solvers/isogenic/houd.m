@@ -1,11 +1,18 @@
-function [v1,v2,b,bg] = houd(v1,v2)
+function [v1,v2,b,bg] = houd(v1,v2,W,fRBM)
 
-sz = size(v1);
-n = sz(1); m = sz(2); k = sz(3);
-N = n*m*k;
+sz = size(W); 
+if ~fRBM
+N = prod(sz(1:end-1));
+else
+N = sum(sz); 
+end
 
 differ = v1 ~= v2;
+if ~fRBM
 [list,b,bg] = get_sclus(differ);
+else
+[list,b,bg] = get_RBMclus(differ,W); 
+end
 
 if list == 0
     return;
@@ -18,7 +25,11 @@ if bg(end) > ceil(N/2)
         v2 = -v2;
     end
     differ = v1 ~= v2;
+    if ~fRBM
     [list,b,bg] = get_sclus(differ);
+    else
+    [list,b,bg] = get_RBMclus(differ,W);
+    end
     if list == 0
         return;
     end   

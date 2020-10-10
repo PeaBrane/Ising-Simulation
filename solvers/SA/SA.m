@@ -1,12 +1,18 @@
-function [Ebest,t,state] = SA(betapara,nr,Esol,W,T,tw,fRBM,falgo,monitor)
+function [Ebest,t,state] = SA(vars,Esol,W,fRBM,T,tw,falgo,monitor)
 
 % load
+betapara = vars(1:2); nr = vars(3);
+quiet = monitor(1); record = monitor(2);
 if ~fRBM
 sz = size(W); sz = sz(1:end-1); N = prod(sz);
 else
 sz = size(W); n = sz(1); m = sz(2); N = n+m;
 end
+if record
 betalist = geoseries(betapara(1),betapara(2),nr); bl = length(betalist);
+else
+t0 = 2^10; betalist = geoseries(betapara(1),betapara(2),t0); bl = 1;
+end
 Ebest = 0; flag = 0;
 
 % initialization
@@ -18,7 +24,6 @@ end
 [~,field,~,E,~] = get_E(v,W,fRBM);
 
 % monitor
-quiet = monitor(1); record = monitor(2);
 fsweep = falgo(1); fwolff = falgo(2); fkbd = falgo(3);
 if record
 state = struct;
@@ -34,8 +39,13 @@ if fkbd
 end
 
 for bi = 1:bl
-beta = betalist(bi); rec = 0;
+rec = 0;
 for t = 1:T
+if record
+beta = betalist(bi);
+else
+beta = betalist(mod(t-1,t0)+1);
+end
 
 % sweep
 if fsweep

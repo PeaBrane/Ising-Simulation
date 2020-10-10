@@ -7,9 +7,9 @@ Wpos = ones(n,m); % records the indices of non-negative elements
 
 % break the degeneracy slightly if frus = 0.25
 if frus == 0.25
-    alpha = scale - 1;
+    alpha = scale*0.99;
 else
-    alpha = floor(3*frus/(1-frus)*scale);
+    alpha = 3*frus/(1-frus)*scale;
 end
 
 loop = 0;
