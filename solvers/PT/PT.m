@@ -65,7 +65,11 @@ for t = 1:T
         v0 = vlist;
     end
     if t > tw
+    if ~Esol
+    state.E(1,rlist) = state.E(1,rlist) + (Esol-Elist)/N;  
+    else
     state.E(1,rlist) = state.E(1,rlist) + (Esol-Elist)/Esol/N;
+    end
     if ismember(t-tw,tlist)
     rec = rec+1;
     for r = 1:nr

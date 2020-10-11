@@ -11,6 +11,11 @@ if cloops == Inf
     nl3 = n_loops;
 end
 
+if frus == 11
+    W = normrnd(0,scale,[n m]); Esol = 0; cost = 0;
+    return;
+end
+
 if vers == 0
     W = loop_rand(n,m,scale,frus,n_loops); % random loop algorithm
 elseif vers == 1
