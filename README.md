@@ -9,7 +9,7 @@ Other than the generation of RBM instances, I take no credit for the invention o
 **Email**: yrpei@ucsd.edu
 
 **The generation of RBM instances:**
-https://arxiv.org/abs/1905.05334
+https://jmlr.org/papers/v21/19-368.html
 
 **The generation of tiling instances:**
 https://journals.aps.org/pre/abstract/10.1103/PhysRevE.97.043303
