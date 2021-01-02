@@ -7,7 +7,7 @@ else
 N = prod(sz(1:end-1));
 end
 
-w = logical(floor( w + rand(sz) ));
+w = logical(floor( w + rand(sz,'single') ));
 G = get_G(w);
 [idx,bsz] = conncomp(G);
 if isempty(bsz)
@@ -21,7 +21,7 @@ ind = cdf_sample(to_cdf(bsz));
 list = find(idx == ind);
 else
 [idx,ind] = discard(idx);
-ind = ind(logical(round(rand(1,length(ind)))));
+ind = ind(logical(round(rand([1,length(ind)],'single'))));
 if isempty(ind)
     list = 0;
     return;

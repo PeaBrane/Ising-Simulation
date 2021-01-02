@@ -19,7 +19,7 @@ if list == 0
 end
 
 if bg(end) > ceil(N/2)
-    if rand() < 0.5
+    if rand('single') < 0.5
         v1 = -v1;
     else
         v2 = -v2;

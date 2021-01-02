@@ -24,7 +24,7 @@ end
 [~,field,~,E,~] = get_E(v,W,fRBM);
 
 % monitor
-fsweep = falgo(1); fwolff = falgo(2); fkbd = falgo(3);
+fsweep = ~falgo(1); fwolff = falgo(3); fkbd = falgo(4);
 if record
 state = struct;
 state.tlist = unique(round(geoseries(1,(T-tw),10*round(log2(T-tw))))); recs = length(state.tlist);

@@ -1,31 +1,37 @@
-function [algo,fname] = get_suffix(fRBM,falgo)
+function [algo,fname] = get_suffix(flist,fRBM,falgo)
 
 fname = '';
 if fRBM
     fname = strcat(fname,'_RBM');
 end
-
-d = length(falgo);
-if d == 1
-if ~falgo
-fname = strcat(fname,'_PT');
-algo = 'PT';
-elseif falgo == 1
-fname = strcat(fname,'_ICM');  
-algo = 'ICM';
-elseif falgo == 2
-fname = strcat(fname,'_mem');
-algo = 'mem';
+if length(flist) == 1
+    if flist == 1
+        fname = strcat(fname,'_jig');
+    elseif flist == 11
+        fname = strcat(fname,'_dom');
+    end
+elseif length(flist) == 5
+    fname = strcat(fname,'_til');
 end
-elseif d == 3
+
+if falgo(1) == 0
 algo = 'SA';
+elseif falgo(1) == 1
+if ~falgo(2)
+algo = 'PT';
+else
+algo = 'ICM'; 
+end
+else
+algo = 'mem'; 
+end
+fname = strcat(fname,'_',algo);
+
 if falgo(3)
-fname = strcat(fname,'_KBD');
-elseif falgo(2)
 fname = strcat(fname,'_Wolff');
-elseif falgo(1)
-fname = strcat(fname,'_SA');
-end   
+end
+if falgo(4)
+fname = strcat(fname,'_KBD','_',num2str(falgo(4)));
 end
 
 end

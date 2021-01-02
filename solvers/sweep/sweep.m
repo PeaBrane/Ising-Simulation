@@ -4,12 +4,12 @@ if fRBM
     sz = size(W); n = sz(1); m = sz(2);
     h = v(n+1:end); v = v(1:n);
     ratio = -2*beta*field(n+1:end).*h;
-    indices = ratio > log(rand([1 m]));
+    indices = ratio > log(rand([1 m],'single'));
     h(indices) = -h(indices);
     field(1:n) = (W*h.').';
     E = v*W*h.';
     ratio = -2*beta*field(1:n).*v;
-    indices = ratio > log(rand([1 n]));
+    indices = ratio > log(rand([1 n],'single'));
     v(indices) = -v(indices);
     field(n+1:end) = v*W;
     E = max([E v*W*h.']);   
@@ -17,13 +17,12 @@ if fRBM
     return;
 end
 
-d = length(size(v));
+sz = size(v); d = length(sz);
 
 if d == 2
- 
-n = size(v,1); m = size(v,2);
-randlist = ceil(log(rand(n,m))/beta);
 
+n = sz(1); m = sz(2);
+randlist = ceil(log(rand(sz,'single'))/beta);
 i1list = circshift(1:n, 1); i2list = circshift(1:n, -1);
 j1list = circshift(1:m, 1); j2list = circshift(1:m, -1);
 
@@ -33,7 +32,6 @@ for j = 1:m
 j1 = j1list(j); j2 = j2list(j);
     
     v0 = v(i,j);
-    
     if -2*field(i,j)*v0 >= randlist(i,j)
         v(i,j) = -v0;
         E = E - 2*field(i,j)*v0;
@@ -48,8 +46,8 @@ end
     
 elseif d == 3
 
-n = size(v,1); m = size(v,2); k = size(v,3);
-randlist = ceil(log(rand(n,m,k))/beta);
+n = sz(1); m = sz(2); k = sz(3);
+randlist = ceil(log(rand(sz,'single'))/beta);
 
 i1list = circshift(1:n, 1); i2list = circshift(1:n, -1);
 j1list = circshift(1:m, 1); j2list = circshift(1:m, -1);

@@ -19,8 +19,8 @@ end
 
 for i = 1:n
 for j = 1:m
-if ~mod(i+j,2) && floor(flist+rand())
-    wp(i,j,ceil(4*rand())) = -1;
+if ~mod(i+j,2) && floor(flist+rand('single'))
+    wp(i,j,ceil(4*rand('single'))) = -1;
 end
 end
 end

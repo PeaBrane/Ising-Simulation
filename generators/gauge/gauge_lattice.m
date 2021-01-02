@@ -3,7 +3,7 @@ function [w,v] = gauge_lattice(w)
 sz = size(w); sz = sz(1:end-1);
 dim = length(sz);
 
-v = -1+2*round(rand(sz));
+v = -1+2*round(rand(sz,'single'));
 
 if dim == 2
     

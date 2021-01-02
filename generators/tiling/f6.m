@@ -2,8 +2,8 @@ function cube = f6()
 
 cube = ones(1,12);
 
-i = ceil(rand()*4);
-j = ceil(rand()*2);
+i = ceil(rand('single')*4);
+j = ceil(rand('single')*2);
 
 if j == 1
     i1 = mod4(i+1) + 4;

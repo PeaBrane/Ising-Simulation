@@ -5,7 +5,7 @@ ins = length(Nlist);
 
 quiet = monitor(1); fsave = monitor(3);
 tlist = zeros(runs,ins); clist = zeros(runs,ins);
-[algo,fname] = get_suffix(fRBM,falgo);
+[algo,fname] = get_suffix(flist,fRBM,falgo);
 fname = strcat('scale',fname,'.mat');
 
 for in = 1:ins
@@ -14,7 +14,7 @@ sz = nmk(in,:); N = prod(sz);
 if ~strcmp(algo,'mem')
 vars([1 2]) = [0.1 log(N)];
 end
-[list1,list2] = perc(vars,falgo,sz,flist,fRBM,runs,T,p);
+[list1,list2] = perc(vars,algo,sz,flist,fRBM,runs,T,p);
 tlist(:,in) = list1.'; clist(:,in) = list2.';
 
 if ~quiet

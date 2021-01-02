@@ -18,14 +18,14 @@ icm = false; % do not employ the icm (Houdayer) cluster update schedule
 % Run Parameters
 
 npara = [40 50]; % run RBM sized from 40x40 to 60x60
-T = 2^8; % total simulation time
-tw = 2^7; % wait time before recording statistics
+T = 2^10; % total simulation time
+tw = 2^9; % wait time before recording statistics
 
-runs = 50; % total number of distinct instance
+runs = 100; % total number of distinct instance
 monitor = [0 1 0]; %[quiet record save]
 
 % main
 
 [Nlist,tlist,ttlist,betalist,normsz,Ediff,lap,clus] = statistics([betapara nr],icm,npara,11,fRBM,runs,T,tw,monitor);
-lbs = {'beta','U/N'};
-smartplot(betalist,Ediff,[50 50 50],[true true],false,[],lbs,[]);
+lbs = {'beta','U/N'}; lgs = {'40x40','45x45','50x50'};
+smartplot(betalist,Ediff,[50 50 50],[true true],false,'Random RBM',lbs,lgs);

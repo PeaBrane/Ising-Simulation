@@ -8,7 +8,7 @@ else
 sz = size(W); n = sz(1); m = sz(2); N = n+m; betac = 0;
 end
 betalist = geoseries(betapara(1),betapara(2),nr);
-betahigh = betalist(find(betalist > betac,1,'first'):end); bhl = length(betahigh);
+% betahigh = betalist(find(betalist > betac,1,'first'):end); bhl = length(betahigh);
 Ebest = 0;
 
 % initialization
@@ -20,9 +20,9 @@ else
     for c = 1:2
     for r = 1:nr
        if ~fRBM
-           vlist{c,r} = -1+2*round(rand(sz));
+           vlist{c,r} = -1+2*round(rand(sz,'single'));
        else
-           vlist{c,r} = -1+2*round(rand(1,N));
+           vlist{c,r} = -1+2*round(rand([1 N],'single'));
        end
     end
     end
@@ -40,7 +40,8 @@ tlist = unique(round(geoseries(1,(T-tw),10*round(log2(T-tw))))); recs = length(t
 state = struct;
 state.E = zeros(1,2,nr);
 state.lap = zeros(1,recs,2,nr);
-state.clus = zeros(1,N,bhl);
+state.clus = zeros(1,N,nr);
+% state.clus = zeros(1,N,bhl);
 else
 state = 0; 
 end
@@ -57,25 +58,37 @@ for t = 1:T
     end
     
     % ICM
-    for bhi = 1:bhl
-    beta = betahigh(bhi);
-    r1 = find(betalist(rlist(1,:)) == beta); r2 = find(betalist(rlist(2,:)) == beta);
+    if t > tw
+    for ir = 1:nr
+    r1 = find(rlist(1,:) == ir); r2 = find(rlist(2,:) == ir);
     [vlist{1,r1},vlist{2,r2},b,bg] = houd(vlist{1,r1},vlist{2,r2},W,fRBM);
     [~,field{1,r1},~,Elist(1,r1),~] = get_E(vlist{1,r1},W,fRBM);
     [~,field{2,r2},~,Elist(2,r2),~] = get_E(vlist{2,r2},W,fRBM);
-    if sum(b) && (t>tw)
-    state.clus(1,bg,bhi) = state.clus(1,bg,bhi) + b;
+    if sum(b)
+    state.clus(1,bg,ir) = state.clus(1,bg,ir)+b;
+    end
     end
     end
     
+%     for bhi = 1:bhl
+%     beta = betahigh(bhi);
+%     r1 = find(betalist(rlist(1,:)) == beta); r2 = find(betalist(rlist(2,:)) == beta);
+%     [vlist{1,r1},vlist{2,r2},b,bg] = houd(vlist{1,r1},vlist{2,r2},W,fRBM);
+%     [~,field{1,r1},~,Elist(1,r1),~] = get_E(vlist{1,r1},W,fRBM);
+%     [~,field{2,r2},~,Elist(2,r2),~] = get_E(vlist{2,r2},W,fRBM);
+%     if sum(b) && (t>tw)
+%     state.clus(1,bg,bhi) = state.clus(1,bg,bhi) + b;
+%     end
+%     end
+    
     % PT
     for c = 1:2
-    ir1 = ceil(rand()*(nr-1)); ir2 = ir1+1;
+    ir1 = ceil(rand('single')*(nr-1)); ir2 = ir1+1;
     r1 = find(rlist(c,:) == ir1); r2 = find(rlist(c,:) == ir2);
     beta1 = betalist(ir1); beta2 = betalist(ir2);
     E1 = Elist(c,r1); E2 = Elist(c,r2);
     prob = exp((beta1-beta2)*(E2-E1));
-    if floor(rand() + prob) > 1
+    if floor(rand('single') + prob) > 1
         rlist(c,[r1 r2]) = rlist(c,[r2 r1]);
     end
     end

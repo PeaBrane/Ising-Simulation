@@ -1,7 +1,7 @@
 function cube = f42()
 
 cube = ones(1,12);
-i = ceil(rand()*6);
+i = ceil(rand('single')*6);
 
 if i <= 4
     i1 = i;
