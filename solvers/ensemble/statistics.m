@@ -1,12 +1,14 @@
-function [Nlist,tlist,ttlist,wlist,betalist,normsz,Ediff,lap,clus,sclus] = statistics(vars,falgo,npara,flist,fRBM,runs,T,tw,tc,monitor)
+function [para,state] = statistics(vars,falgo,npara,flist,fRBM,runs,T,tw,monitor)
 
-d = length(npara);
-betapara = vars(1:2); nr = vars(3); betalist = geoseries(betapara(1),betapara(2),nr);
-[algo,fname] = get_suffix(npara,flist,fRBM,falgo);
+betapara = vars(1:2); nr = vars(3);
+fsave = monitor(3);
+[algo,flist,fname] = get_suffix(falgo,npara,flist,fRBM);
 fname = strcat('stat',fname,'.mat');
+
+nt = T; dt = 1;
 if strcmp(algo,'mem')
-t0 = floor(2^vars(7)); 
-tw = floor(tw); T = ceil(T/t0)*t0;
+t0 = floor(2^vars(7)); nr = ceil(T/t0);
+dt = 2^-5; nt = round(t0/dt); 
 end
 
 [Nlist,nmk] = get_nmk(npara,fRBM); ins = length(Nlist);
@@ -16,26 +18,36 @@ for in = 1:ins
    N = Nlist(in);
    normsz{in} = (1:N)/N;
 end
-tlist = unique(round(geoseries(1,(T-tw),10*round(log2(T-tw))))); recs = length(tlist);
-ttlist = unique(round(geoseries(1,T,10*round(log2(T))))); rrecs = length(ttlist);
-wlist = 0;
-dt0 = 2^-10; reccut = ceil(tc/dt0);
-if strcmp(algo,'SA') || strcmp(algo,'PT')
-Ediff = zeros(tots,nr); lap = zeros(tots,recs,nr);
-elseif strcmp(algo,'ICM')
-Ediff = zeros(tots,2,nr); lap = zeros(tots,recs,2,nr);
-elseif strcmp(algo,'mem')
-Ediff = zeros(tots,rrecs); 
-N = prod(nmk(end,:));
-x = zeros(tots,rrecs,N*d); xt = zeros(tots,reccut,N*d); 
-lap = zeros(tots,recs);
+
+para = struct;
+para.Nlist = Nlist;
+para.normsz = normsz;
+para.tlist = unique(round(geoseries(1,(T-tw),10*round(log2(T-tw))))); recs = length(para.tlist);
+para.wlist = (0:nt-1)/nt/dt*2*pi;
+para.betalist = geoseries(betapara(1),betapara(2),nr);
+
+state = struct;
+state.Ediff = zeros(1,nr,ins);
+state.dlap = zeros(1,recs,nr,ins);
+state.smag = zeros(1,nr,ins);
+state.pmag = zeros(1,nr,ins);
+state.slap = cell(ins,nr);
+state.plap = cell(ins,nr);
+state.sclus = cell(1,tots);
+state.bclus = cell(1,tots);
+
+if strcmp(algo,'ICM')
+state.Ediff = zeros(tots,2,nr); 
+state.dlap = zeros(tots,recs,2,nr);
 end
-clus = cell(1,tots);
-sclus = cell(1,tots);
-fsave = monitor(3);
+if strcmp(algo,'mem')
+state.vspec = zeros(tots,nt,nr);
+state.xspec = zeros(tots,nt,nr);
+end
 
 % Simulated Annealing
 if strcmp(algo,'SA')
+Ediff = zeros(tots,nr); dlap = zeros(tots,recs,nr); sclus = cell(1,tots);
 parfor tot = 1:tots
 in = fix((tot-1)/runs)+1; sz = nmk(in,:);
 if ~fRBM
@@ -43,18 +55,20 @@ if ~fRBM
 else
 [W,Esol] = rbmloops(sz,0.31,flist);
 end
-[~,~,state] = SA(vars,Esol,W,fRBM,T,tw,falgo,[1 1 0]);
-Ediff(tot,:) = state.E; lap(tot,:,:) = state.lap; clus{tot} = state.clus; 
+[~,~,st] = SA(vars,falgo,Esol,W,fRBM,T,tw,[1 1 0]);
+Ediff(tot,:) = st.E; dlap(tot,:,:) = st.dlap; sclus{tot} = st.sclus; 
 end
-Ediff = mean(permute(reshape(Ediff,[runs ins nr]),[1 3 2]),1);
-lap = mean(permute(reshape(lap,[runs ins recs nr]),[1 3 4 2]),1);
-clus = cellmean(reshape(clus,[runs ins])); 
+state.Ediff = mean(permute(reshape(Ediff,[runs ins nr]),[1 3 2]),1);
+state.dlap = mean(permute(reshape(dlap,[runs ins recs nr]),[1 3 4 2]),1);
+state.sclus = cellmean(reshape(sclus,[runs ins])); 
 if fsave
-save(fname,'Nlist','tlist','betalist','normsz','Ediff','lap','clus');
+save(fname,'state');
 end 
 
 % Parallel Tempering
 elseif strcmp(algo,'PT')
+Ediff = zeros(tots,nr); dlap = zeros(tots,recs,nr); sclus = cell(1,tots);
+slap = cell(tots,nr); plap = cell(tots,nr);
 parfor tot = 1:tots
 in = fix((tot-1)/runs)+1; sz = nmk(in,:);
 if ~fRBM
@@ -62,19 +76,28 @@ if ~fRBM
 else
 [W,Esol] = rbmloops(sz,0.31,flist);
 end
-[~,~,~,state] = PT(vars,Esol,W,fRBM,T,tw,falgo,[],[1 1 0]);
-Ediff(tot,:) = state.E; lap(tot,:,:) = state.lap; clus{tot} = state.clus; sclus{tot} = state.sclus;
+[~,~,~,st] = PT(vars,falgo,Esol,W,fRBM,T,tw,[],[1 1 0]);
+Ediff(tot,:) = st.E; smag(tot,:) = st.smag; pmag(tot,:) = st.pmag;
+dlap(tot,:,:) = st.dlap; sclus{tot} = st.sclus; bclus{tot} = st.bclus;
+for r = 1:nr
+    slap{tot,r} = st.slap{r}; plap{tot,r} = st.plap{r};
 end
-Ediff = mean(permute(reshape(Ediff,[runs ins nr]),[1 3 2]),1);
-lap = mean(permute(reshape(lap,[runs ins recs nr]),[1 3 4 2]),1);
-clus = cellmean(reshape(clus,[runs ins])); 
-sclus = cellmean(reshape(sclus,[runs ins])); 
+end
+state.Ediff = mean(permute(reshape(Ediff,[runs ins nr]),[1 3 2]),1);
+state.smag = mean(permute(reshape(smag,[runs ins nr]),[1 3 2]),1);
+state.pmag = abs(mean(permute(reshape(pmag,[runs ins nr]),[1 3 2]),1));
+state.dlap = mean(permute(reshape(dlap,[runs ins recs nr]),[1 3 4 2]),1);
+state.slap = reshape(cellmean(reshape(slap,[runs ins*nr])),[ins nr]);
+state.plap = cellfun(@abs,reshape(cellmean(reshape(plap,[runs ins*nr])),[ins nr]),'uniformoutput',false);
+state.sclus = cellnorm(cellmean(reshape(sclus,[runs ins]))); 
+state.bclus = cellnorm(cellmean(reshape(bclus,[runs ins]))); 
 if fsave
-save(fname,'Nlist','tlist','betalist','normsz','Ediff','lap','clus','sclus');
+save(fname,state);
 end
 
 % Isoenergetic Cluster Move
 elseif strcmp(algo,'ICM')
+Ediff = zeros(tots,2,nr); dlap = zeros(tots,recs,2,nr); sclus = cell(1,tots);    
 parfor tot = 1:tots
 in = fix((tot-1)/runs)+1; sz = nmk(in,:);
 if ~fRBM
@@ -82,18 +105,19 @@ if ~fRBM
 else
 [W,Esol] = rbmloops(sz,0.31,flist);
 end
-[~,~,~,state] = PTI(vars,Esol,W,fRBM,T,tw,[],[1 1 0]);
-Ediff(tot,:,:) = state.E; lap(tot,:,:,:) = state.lap; clus{tot} = state.clus; 
+[~,~,~,st] = PTI(vars,Esol,W,fRBM,T,tw,[],[1 1 0]);
+Ediff(tot,:,:) = st.E; dlap(tot,:,:,:) = st.dlap; sclus{tot} = st.sclus; 
 end
-Ediff = permute(reshape(mean(reshape(Ediff,[runs ins 2 nr]),[1 3]),[1 ins nr]),[1 3 2]);
-lap = permute(reshape(mean(reshape(lap,[runs ins recs 2 nr]),[1 4]),[1 recs ins nr]),[1 2 4 3]);
-clus = cellmean(reshape(clus,[runs ins]));
+state.Ediff = permute(reshape(mean(reshape(Ediff,[runs ins 2 nr]),[1 3]),[1 ins nr]),[1 3 2]);
+state.dlap = permute(reshape(mean(reshape(dlap,[runs ins recs 2 nr]),[1 4]),[1 recs ins nr]),[1 2 4 3]);
+state.sclus = cellnorm(cellmean(reshape(sclus,[runs ins])));
 if fsave
-save(fname,'Nlist','tlist','betalist','normsz','Ediff','lap','clus');
+save(fname,'state');
 end  
 
 % Memory
 elseif strcmp(algo,'mem')
+bclus = cell(1,tots); vspec = zeros(tots,nt,nr); xspec = zeros(tots,nt,nr);
 parfor tot = 1:tots
 in = fix((tot-1)/runs)+1; sz = nmk(in,:);
 if ~fRBM
@@ -101,19 +125,14 @@ if ~fRBM
 else
 [W,Esol] = rbmloops(sz,0.31,flist);
 end
-[~,~,~,~,state] = mem(vars,Esol,W,fRBM,T,tw,tc,[],[1 1 0]);
-Ediff(tot,:) = state.E; x(tot,:,:) = state.x; xt(tot,:,:) = state.xt;
-lap(tot,:) = state.lap; clus{tot} = state.clus; 
+[~,~,~,~,st] = mem(vars,Esol,W,fRBM,T,[],[1 1 0]);
+bclus{tot} = st.bclus; vspec(tot,:,:) = st.vspec; xspec(tot,:,:) = st.xspec;
 end
-Ediff = mean(permute(reshape(Ediff,[runs ins rrecs]),[1 3 2]),1);
-lap = mean(permute(reshape(lap,[runs ins recs]),[1 3 2]),1);
-clus = cellmean(reshape(clus,[runs ins]));
-% xmean = permute(mean(reshape(x,[runs rrecs N*d]),[1 4]),[1 3 2]);
-% xstd = permute(std(reshape(x,[runs rrecs N*d]),0,[1 4]),[1 3 2]);
-% [wlist,xspec] = spec(dt0,mean(reshape(xt,[runs reccut N*d]),3));
-% [wlist,xspec] = spec(2^-5,reshape(permute(reshape(xt,[runs reccut N*d]),[1 3 2]),[runs*N*d reccut]));
+state.bclus = cellnorm(cellmean(reshape(bclus,[runs ins]))); 
+state.vspec = mean(permute(reshape(vspec,[runs ins nt nr]),[1 3 4 2]),1);
+state.xspec = mean(permute(reshape(xspec,[runs ins nt nr]),[1 3 4 2]),1);
 if fsave
-save(fname,'Nlist','tlist','betalist','normsz','Ediff','lap','clus');
+save(fname,'state');
 end  
 end
 

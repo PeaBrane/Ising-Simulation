@@ -1,7 +1,7 @@
 function [list,b,bg] = get_bclus(w,sw)
 
 sz = size(w); 
-if sz == 2
+if length(sz) == 2
 N = sum(sz);
 else
 N = prod(sz(1:end-1));

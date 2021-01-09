@@ -1,8 +1,8 @@
-function [wlist,S] = spec(dt,f)
+function [slist,wlist] = spec(flist,tlist,nt,dt)
 
-n = length(f);
-wlist = (0:n-1)/n/dt*2*pi;
-g = fft(f,n,2)*sqrt(dt/n);
-S = mean(abs(g).^2,1);
+flist = interp1(tlist,flist,(1:nt)*dt);
+wlist = (0:nt-1)/nt/dt*2*pi;
+g = fft(flist,nt,2)*sqrt(dt/nt);
+slist = mean(abs(g).^2,1);
 
 end

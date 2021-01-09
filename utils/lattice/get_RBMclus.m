@@ -1,7 +1,7 @@
-function [list,b,bg] = get_RBMclus(v,W)
+function [list,b,bg] = get_RBMclus(v,w)
 
-n = size(W,1); h = v(n+1:end); v = v(1:n);
-W = (v.'*h) & W;
-[list,b,bg] = get_bclus(W,false);
+n = size(w,1); h = v(n+1:end); v = v(1:n);
+w = (v.'*h) & w;
+[list,b,bg] = get_bclus(w,false);
 
 end

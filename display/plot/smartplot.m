@@ -22,11 +22,11 @@ end
 
 hold off;
 if ~isempty(legendcell)
-legend(pl,legendcell,'fontsize',14,'interpreter','latex','location','northeast');
+legend(pl,legendcell,'fontsize',11,'interpreter','latex','location','southwest');
 end
 set(gca,'fontsize',12);
 if ~isempty(tit)
-title(tit, 'fontsize', 20, 'interpreter', 'latex');
+title(tit, 'fontsize', 16, 'interpreter', 'latex');
 end
 if ~isempty(labels)
 xlabel(labels{1}, 'fontsize', 16, 'interpreter', 'latex');
@@ -40,5 +40,8 @@ end
 if f_log(2)
 set(gca,'YScale','log');
 end
+
+% xlim([10^-3 1]);
+% ylim([10^-3 1]);
 
 end

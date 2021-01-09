@@ -1,6 +1,4 @@
-function [tlist,clist] = perc(vars,falgo,sz,flist,fRBM,runs,T,p)
-
-[algo,~,~] = get_suffix(falgo,sz,flist,fRBM);
+function [tlist,clist] = perc(vars,algo,sz,flist,fRBM,falgo,runs,T,p)
 
 [Wlist,Esol] = ensemble(sz,flist,fRBM,runs);
 tlist = zeros(1,runs); clist = zeros(1,runs);
@@ -18,9 +16,9 @@ Elist = zeros(1,ins);
 parfor in = 1:ins
 run = unsol(in); cc = conf{in}; W = Wlist{run};
 if strcmp(algo,'SA')
-[Elist(in),temp1(in),] = SA(vars,Esol(in),W,fRBM,T,Inf,[1 0 0]);
+[Elist(in),temp1(in),] = SA(vars,Esol(in),W,fRBM,T,Inf,falgo,[1 0 0]);
 elseif strcmp(algo,'PT')
-[Elist(in),temp1(in),cc] = PT(vars,falgo,Esol(in),W,fRBM,T,Inf,cc,[1 0 0]);
+[Elist(in),temp1(in),cc] = PT(vars,Esol(in),W,fRBM,T,Inf,falgo,cc,[1 0 0]);
 elseif strcmp(algo,'ICM')
 [Elist(in),temp1(in),cc] = PTI(vars,Esol(in),W,fRBM,T,Inf,cc,[1 0 0]);
 elseif strcmp(algo,'mem')

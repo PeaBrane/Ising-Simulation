@@ -1,18 +1,29 @@
-function [algo,fname] = get_suffix(flist,fRBM,falgo)
+function [algo,flist,fname] = get_suffix(falgo,npara,flist,fRBM)
 
 fname = '';
 if fRBM
+    if isempty(flist)
+        flist = 0.23;
+    end
     fname = strcat(fname,'_RBM');
 end
-if length(flist) == 1
+if length(npara) == 2
+    if isempty(flist)
+        flist = 11;
+    end
     if flist == 1
         fname = strcat(fname,'_jig');
     elseif flist == 11
         fname = strcat(fname,'_dom');
     end
-elseif length(flist) == 5
+elseif length(npara) == 3
+    if isempty(flist)
+        flist = [0 0 0 0 1]; 
+    end
     fname = strcat(fname,'_til');
 end
+
+falgo = [falgo zeros(1,4-length(falgo))];
 
 if falgo(1) == 0
 algo = 'SA';

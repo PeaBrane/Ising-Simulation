@@ -1,6 +1,5 @@
-function Ediff = multiple(vars,falgo,sz,flist,fRBM,runs,T)
+function Ediff = multiple(vars,algo,sz,flist,fRBM,runs,T)
 
-algo = get_suffix(fRBM,falgo);
 [Wlist,Esol] = ensemble(sz,flist,fRBM,runs);
 Elist = zeros(1,runs);
 
@@ -13,7 +12,7 @@ Elist(run) = PT(vars,Esol(run),W,fRBM,T,Inf,[],[1 0 0]);
 elseif strcmp(algo,'ICM')
 Elist(run) = PTI(vars,Esol(run),W,fRBM,T,Inf,[],[1 0 0]);
 elseif strcmp(algo,'mem')
-Elist(run) = mem(vars,Esol(run),W,fRBM,T,Inf,[],[1 0 0]);
+Elist(run) = mem(vars,Esol(run),W,fRBM,T,[],[1 0 0]);
 end
 end
 Ediff = Esol-Elist;

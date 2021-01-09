@@ -6,7 +6,7 @@ temp = zeros(size(list{1,j}));
 for i = 1:n
 temp = temp+list{i,j};
 end
-ll{j} = normalize(temp,2,'norm',1);
+ll{j} = temp/n;
 end
 
 end
