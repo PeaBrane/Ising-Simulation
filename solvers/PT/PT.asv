@@ -111,9 +111,7 @@ for t = 1:T
     if ~fRBM
     state.dlap(1,rec,ir) = sum(v0{ir}.*vlist{r},'all')/N;
     else
-    vv0 = v0{ir}(1:n); hh0 = v0{ir}(n+1:n+m);
-    vv = vlist{r}(1:n); hh = vlist{r}(n+1:n+m);
-    state.dlap(1,rec,ir) = sum( (vv0.*vv).'*(hh0.*hh), 'all' )/n/m; 
+    state.dlap(1,rec,ir) = sum( v0{ir} )/n/m; 
     end
     end
     end

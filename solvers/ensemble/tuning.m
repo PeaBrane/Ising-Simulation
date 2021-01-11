@@ -4,14 +4,14 @@ ll = length(vars0);
 varc = vars0(setdiff(1:ll,indices));
 varv = vars0(indices);
 
-[algo,fname] = get_suffix(flist,fRBM,falgo);
+[falgo,algo,flist,fname] = get_suffix(falgo,sz,flist,fRBM);
 fname = strcat('tune',fname,'.mat');
 quiet = monitor(1); fsave = monitor(3);
 
 if fAPX
-fun = @(var) approx(myinsert(varc,var,indices),algo,sz,flist,fRBM,runs,T,gap);
+fun = @(var) approx(myinsert(varc,var,indices),falgo,sz,flist,fRBM,runs,T,gap);
 else
-fun = @(var) mean(multiple(myinsert(varc,var,indices),algo,sz,flist,fRBM,runs,T));
+fun = @(var) mean(multiple(myinsert(varc,var,indices),falgo,sz,flist,fRBM,runs,T));
 end
 
 if fSA

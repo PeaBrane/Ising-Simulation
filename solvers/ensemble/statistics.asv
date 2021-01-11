@@ -65,7 +65,7 @@ end
 % Parallel Tempering
 elseif strcmp(algo,'PT')
 Ediff = zeros(tots,nr); dlap = zeros(tots,recs,nr); sclus = cell(1,tots);
-pmag = zeros(tots,nr);
+
 parfor tot = 1:tots
 in = fix((tot-1)/runs)+1; sz = nmk(in,:);
 if ~fRBM
@@ -74,11 +74,14 @@ else
 [W,Esol] = rbmloops(sz,0.31,flist);
 end
 [~,~,~,st] = PT(vars,falgo,Esol,W,fRBM,T,tw,[],[1 1 0]);
-Ediff(tot,:) = st.E; pmag(tot,:) = st.pmag;
+Ediff(tot,:) = st.E; smag(tot,:) = st.smag; pmag(tot,:) = st.pmag;
 dlap(tot,:,:) = st.dlap; sclus{tot} = st.sclus; bclus{tot} = st.bclus;
+for r = 1:nr
+    slap{tot,r} = st.slap{r}; plap{tot,r} = st.plap{r};
+end
 end
 state.Ediff = mean(permute(reshape(Ediff,[runs ins nr]),[1 3 2]),1);
-state.pmag = mean(permute(reshape(pmag,[runs ins nr]),[1 3 2]),1);
+state.pmag = abs(mean(permute(reshape(pmag,[runs ins nr]),[1 3 2]),1));
 state.dlap = mean(permute(reshape(dlap,[runs ins recs nr]),[1 3 4 2]),1);
 state.sclus = cellnorm(cellmean(reshape(sclus,[runs ins]))); 
 state.bclus = cellnorm(cellmean(reshape(bclus,[runs ins]))); 

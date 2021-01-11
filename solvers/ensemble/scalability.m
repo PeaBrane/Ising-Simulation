@@ -5,7 +5,7 @@ ins = length(Nlist);
 
 quiet = monitor(1); fsave = monitor(3);
 tlist = zeros(runs,ins); clist = zeros(runs,ins);
-[algo,flist,fname] = get_suffix(falgo,npara,flist,fRBM);
+[falgo,algo,flist,fname] = get_suffix(falgo,npara,flist,fRBM);
 fname = strcat('scale',fname,'.mat');
 
 for in = 1:ins

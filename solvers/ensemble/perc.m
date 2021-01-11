@@ -1,6 +1,6 @@
 function [tlist,clist] = perc(vars,falgo,sz,flist,fRBM,runs,T,p)
 
-[algo,~,~] = get_suffix(falgo,sz,flist,fRBM);
+[~,algo,~,~] = get_suffix(falgo,sz,flist,fRBM);
 
 [Wlist,Esol] = ensemble(sz,flist,fRBM,runs);
 tlist = zeros(1,runs); clist = zeros(1,runs);

@@ -1,4 +1,4 @@
-function [algo,flist,fname] = get_suffix(falgo,npara,flist,fRBM)
+function [falgo,algo,flist,fname] = get_suffix(falgo,npara,flist,fRBM)
 
 fname = '';
 if fRBM
@@ -22,7 +22,6 @@ elseif length(npara) == 3
     end
     fname = strcat(fname,'_til');
 end
-
 falgo = [falgo zeros(1,4-length(falgo))];
 
 if falgo(1) == 0
