@@ -1,8 +1,6 @@
 function draw_cube(cube)
 
-linex = zeros(12,2);
-liney = zeros(12,2);
-linez = zeros(12,2);
+linex = zeros(12,2); liney = zeros(12,2); linez = zeros(12,2);
 
 for i = 1:12
     

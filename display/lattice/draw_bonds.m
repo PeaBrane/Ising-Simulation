@@ -5,6 +5,10 @@ if l == 2*d
     w = get_ww(w);
 end
 
+if isempty(spins)
+    spins = ones(sz);
+end
+
 if d == 2
 
 n = size(w,1); m = size(w,2);

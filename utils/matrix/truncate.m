@@ -3,6 +3,9 @@ function mat = truncate(mat)
 d = length(size(mat));
 boo = all(mat==0, [1:d-1]);
 tail = find(boo(2:end), 1, 'first')+1;
+if isempty(tail)
+    return;
+end
 
 if d == 2
     mat = mat(:,1:tail-1);

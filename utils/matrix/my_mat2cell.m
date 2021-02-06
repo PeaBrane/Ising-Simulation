@@ -17,6 +17,10 @@ if ~iscell(list)
 else
     ll = length(list);
     celist = list;
+    for ii = 1:ll
+    sz = size(celist{ii});
+    celist{ii} = reshape(celist{ii},[sz(1) prod(sz(2:end))]); 
+    end
 end
 
 if ~iscell(ind)

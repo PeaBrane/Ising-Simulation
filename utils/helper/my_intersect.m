@@ -1,7 +1,14 @@
 function c = my_intersect(a,b)
 
-p = zeros(1, max([max(a) max(b)]));
+% for ii = length(b):-1:1
+% if ~any(a==b(ii))
+%     b(ii) = [];
+% end
+% end
+
+ma = max([max(a) max(b)]);
+p = false([1 ma]);
 p(a) = 1;
-c = b(logical(p(b)));
+c = b(p(b));
 
 end

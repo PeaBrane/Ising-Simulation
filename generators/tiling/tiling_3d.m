@@ -18,11 +18,12 @@ end
 cdf = to_cdf(flist);
 wcube = zeros(n,m,k,12);
 
-for i = 1:n
-for j = 1:m
+% n = round(n/2); m = round(m/2); k = round(k/2);
+for i = 1:n 
+for j = 1:m 
 for l = 1:k
    
-    if (mod(i,2) == 1 && mod(j,2) == 1 && mod(l,2) == 1) || (mod(i,2) == 0 && mod(j,2) == 0 && mod(l,2) == 0)
+    if (mod(i,2) && mod(j,2) && mod(l,2)) || (~mod(i,2) && ~mod(j,2) && ~mod(l,2))
         x = cdf_sample(cdf);
         if x == 1  
             cube = f21();
@@ -41,6 +42,7 @@ for l = 1:k
 end
 end
 end
+wcube(:,:,:,:) = wcube(:,:,:,[1 4 9 7 2 10 3 6 12 5 8 11]);
 
 w = wp_to_w(wcube,0,0);
 E = sum(w(:));

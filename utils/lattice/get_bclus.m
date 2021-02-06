@@ -1,4 +1,4 @@
-function [list,b,bg] = get_bclus(w,sw)
+function [list,b,bg,cn] = get_bclus(w,sw)
 
 sz = size(w); 
 if length(sz) == 2
@@ -6,15 +6,17 @@ N = sum(sz);
 else
 N = prod(sz(1:end-1));
 end
+cn = zeros([1 N]);
 
 w = logical(floor( w + rand(sz,'single') ));
 G = get_G(w);
 [idx,bsz] = conncomp(G);
 if isempty(bsz)
-    list = 0; b = 0; bg = 0;
+    list = []; b = 0; bg = [];
     return;
 end
-[b,bg] = groupcounts(bsz.'); b = b.'; bg = bg.';
+[b,bg] = my_gp(bsz.');
+cn(idx == idx(1)) = 1;
 
 if ~sw
 ind = cdf_sample(to_cdf(bsz));

@@ -1,5 +1,6 @@
-function [list,b,bg] = kbd(v,W,beta,g,check)
+function [list,b,bg,cn] = kbd(v,W,beta,g,check)
 
+v = double(v); W = double(W);
 sz = size(W); sz = sz(1:end-1);
 w = get_ww(W); w = get_frus(v,w); b = 1-exp(-4*beta);
 wp = wp_to_w(w,check,1); wp = (wp==-1);
@@ -12,6 +13,6 @@ alist = repmat(alist,[1 1 4]); blist = repmat(blist,[1 1 4]); clist = repmat(cli
 
 wp = alist.*(wp1+wp3) + blist.*(wp2+wp1+clist.*(wp3-wp1));
 w = wp_to_w(wp,check,0);
-[list,b,bg] = get_bclus(w,false);
+[list,b,bg,cn] = get_bclus(w,false);
 
 end

@@ -4,7 +4,7 @@ d = length(npara);
 
 if d == 2
 n1 = npara(1); n2 = npara(2);
-nmk = repmat((n1:4:n2).',[1 2]);
+nmk = repmat((n1:8:n2).',[1 2]);
 elseif d == 3
 n1 = npara(1); n2 = npara(2); quo = npara(3);
 nlist = reshape(repmat(n1:2:n2,[3 1]),[1 3*length(n1:2:n2)]);

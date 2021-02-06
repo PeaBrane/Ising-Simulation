@@ -7,9 +7,9 @@ lfield = W.*V;
 C = repmat(v,[ones(1,d) 2*d]).*lfield + 1;
 
 v0 = sign(v); V0 = sign(V);
-field = sum(W.*V0,d+1);
+field = int16(sum(W.*V0,d+1));
 E2 = field.*v0;
-E = sum(E2(:))/2;
+E = int16(sum(E2(:))/2);
 
 else
 sz = size(W); n = sz(1); m = sz(2);

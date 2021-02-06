@@ -1,4 +1,4 @@
-function [falgo,algo,flist,fname] = get_suffix(falgo,npara,flist,fRBM)
+function [falgo,algo,flist,fname] = get_suffix(falgo,npara,flist,fRBM,vars)
 
 fname = '';
 if fRBM
@@ -9,18 +9,22 @@ if fRBM
 end
 if length(npara) == 2
     if isempty(flist)
-        flist = 11;
+        flist = 1;
     end
-    if flist == 1
-        fname = strcat(fname,'_jig');
-    elseif flist == 11
-        fname = strcat(fname,'_dom');
+    if any(flist == 'g')
+        fname = strcat(fname,'_2dgauss');
+    else
+        fname = strcat(fname,'_2d',num2str(flist));
     end
 elseif length(npara) == 3
     if isempty(flist)
         flist = [0 0 0 0 1]; 
+    end 
+    if any(flist == 'g')
+        fname = strcat(fname,'_3dgauss');
+    else
+        fname = strcat(fname,'_3d',num2str(flist(end)));
     end
-    fname = strcat(fname,'_til');
 end
 falgo = [falgo zeros(1,4-length(falgo))];
 
@@ -42,6 +46,10 @@ fname = strcat(fname,'_Wolff');
 end
 if falgo(4)
 fname = strcat(fname,'_KBD','_',num2str(falgo(4)));
+end
+
+if falgo(1) < 2
+fname = strcat(fname,num2str(vars(1)),'_',num2str(vars(2)));
 end
 
 end

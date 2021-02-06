@@ -22,7 +22,7 @@ sz = size(v); d = length(sz);
 if d == 2
 
 n = sz(1); m = sz(2);
-randlist = ceil(log(rand(sz,'single'))/beta);
+randlist = int16(ceil(log(rand(sz,'single'))/beta));
 i1list = circshift(1:n, 1); i2list = circshift(1:n, -1);
 j1list = circshift(1:m, 1); j2list = circshift(1:m, -1);
 
@@ -47,18 +47,14 @@ end
 elseif d == 3
 
 n = sz(1); m = sz(2); k = sz(3);
-randlist = ceil(log(rand(sz,'single'))/beta);
-
-i1list = circshift(1:n, 1); i2list = circshift(1:n, -1);
-j1list = circshift(1:m, 1); j2list = circshift(1:m, -1);
-l1list = circshift(1:k, 1); l2list = circshift(1:k, -1);
+randlist = int16(ceil(log(rand(sz,'single'))/beta));
 
 for i = 1:n
-i1 = i1list(i); i2 = i2list(i);
+i1 = mod(i-2,n)+1; i2 = mod(i,n)+1;
 for j = 1:m
-j1 = j1list(j); j2 = j2list(j);
+j1 = mod(j-2,m)+1; j2 = mod(j,m)+1;
 for l = 1:k
-l1 = l1list(l); l2 = l2list(l);
+l1 = mod(l-2,k)+1; l2 = mod(l,k)+1;
     
     v0 = v(i,j,l);
     
