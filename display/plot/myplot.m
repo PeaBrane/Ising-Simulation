@@ -18,7 +18,7 @@ hold on;
 else
 p = plot(l(1,:), l(2,:), 'color', brighten(c,-0.4), 'linewidth', 2);
 hold on;
-scatter(ind, med, 18, brighten(c,-0.4), 'filled', 'markerfacealpha', 0.7);
+scatter(ind, med, 18, brighten(c,-0.4), 'filled', 'markerfacealpha', 0.4);
 hold on;
 end
 

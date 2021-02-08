@@ -33,7 +33,7 @@ end
 
 hold on;
 if ~isempty(legendcell)
-legend(pl,legendcell,'fontsize',14,'interpreter','latex','location','northwest','autoupdate','off');
+legend(pl,legendcell,'fontsize',14,'interpreter','latex','location','southwest','autoupdate','off');
 end
 set(gca,'fontsize',12);
 if ~isempty(tit)
