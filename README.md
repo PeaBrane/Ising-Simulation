@@ -6,7 +6,7 @@ The generation algorithms include the frustrated loop instances and the 3D tilin
 
 Other than the generation of RBM instances, I take no credit for the invention of these algorithms.
 
-Recent developments in using memory dynamics to simulate glasses is also included.
+Recent developments in using memory dynamics to simulate glasses are also included.
 
 **Email**: yrpei@ucsd.edu
 
