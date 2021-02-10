@@ -18,3 +18,6 @@ https://journals.aps.org/pre/abstract/10.1103/PhysRevE.97.043303
 
 **Parallel tempering with isoenergetic cluster move:**
 https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.115.077201
+
+**Memory dynamics:**
+https://arxiv.org/abs/2102.04557
