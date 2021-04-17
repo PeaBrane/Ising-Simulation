@@ -13,12 +13,12 @@ hold on;
 end
 % [ind,med] = pop_zero(ind,med);
 if isempty(l) || ~any(l,'all')
-p = plot(ind, med, 'color', c, 'marker', '.', 'markersize', 18, 'linewidth', 2);
+p = plot(ind, med, 'color', c, 'marker', '.', 'markersize', 14, 'linewidth', 2);
 hold on;
 else
 p = plot(l(1,:), l(2,:), 'color', brighten(c,-0.4), 'linewidth', 2);
 hold on;
-scatter(ind, med, 18, brighten(c,-0.4), 'filled', 'markerfacealpha', 0.4);
+scatter(ind, med, 18, brighten(c,-0.4), 'filled', 'markerfacealpha', 0.7);
 hold on;
 end
 

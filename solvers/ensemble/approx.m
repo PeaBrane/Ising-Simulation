@@ -1,6 +1,10 @@
-function unsol = approx(vars,falgo,sz,flist,fRBM,runs,T,gap)
+function unsol = approx(vars,falgo,sz,flist,fRBM,runs,T,conf,gap)
 
-Ediff = multiple(vars,falgo,sz,flist,fRBM,runs,T);
+if ~gap
+    gap = 0.01;
+end
+
+Ediff = multiple(vars,falgo,sz,flist,fRBM,runs,T,conf);
 unsol = 1 - length(find(Ediff <= gap))/runs;
 
 end

@@ -1,7 +1,11 @@
-function Ediff = multiple(vars,falgo,sz,flist,fRBM,runs,T)
+function Ediff = multiple(vars,falgo,sz,flist,fRBM,runs,T,conf)
 
 [falgo,algo,flist,~] = get_suffix(falgo,sz,flist,fRBM,vars);
+if isempty(conf)
 [Wlist,Esol] = ensemble(sz,flist,fRBM,runs);
+else
+Wlist = conf{1}; Esol = conf{2}; 
+end
 Elist = zeros(1,runs);
 
 parfor run = 1:runs

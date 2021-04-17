@@ -9,7 +9,7 @@ d = length(sz); N = prod(sz);
 alpha = vars(1); beta = vars(2); gamma = vars(3); delta = vars(4); zeta = vars(5);
 xini = vars(6); t0 = floor(2^vars(7)); dtlist = 2.^[-5 vars(8)];
 else
-sz = size(W); n = sz(1); m = sz(2); 
+sz = size(W); n = sz(1); m = sz(2); W = W/max(abs(W(:)));
 d = Inf; N = sum(sz);
 alpha = vars(1); beta = vars(2); gamma = vars(3); delta = vars(4); zeta = vars(5);
 xini = vars(6); t0 = floor(2^vars(7)); dtlist = 2.^[-5 vars(8)];
@@ -23,7 +23,7 @@ if xini < 0 || t0 <= 0
     Ebest = -Esol; tt = Inf; state = 0;
     return;
 end
-dt0 = 2^-5; nt = round(t0/dt0); nr = ceil(T/t0); T = t0*nr;
+dt0 = 2^-5; nr = ceil(T/t0); T = t0*nr;
 
 % initialize
 check = checkerboard(sz,0);
@@ -60,9 +60,8 @@ rlist = unique(round(geoseries(1,nr,10*round(log2(nr))))); nrl = length(rlist);
 state.tlist = rlist*t0;
 
 state.Et = zeros([1 rrecs]);
+state.Eb = zeros([1 rrecs]);
 state.bclus = zeros([1 N nrl]);
-% state.vspec = zeros([1 nt nrl]);
-% state.xspec = zeros([1 nt nrl]);
 else
 state = 0;
 end
@@ -71,6 +70,7 @@ tt = 0; step = 0;
 for r = 1:nr
     
 % memory flip
+if ~fRBM
 if r > 1
 if ~fp
 [list,~,~] = get_bclus(get_ww(X),1); 
@@ -81,9 +81,9 @@ if list
 v(list) = -v(list);
 end
 end
+end
 
 t = 0; 
-% tlist = 0; vt = v(1); xt = X(1);
 while t < t0
 
 % gradient
@@ -111,6 +111,7 @@ if record
 if (floor(t+dt)>floor(t)) && ismember(floor(tt+dt),ttlist) 
 rrec = find(ttlist == floor(tt+dt),1,'first');
 state.Et(rrec) = (Esol-E)/N;
+state.Eb(rrec) = -Ebest/N;
 end
 if ismember(r,rlist)
 rec = find(rlist == r,1,'first');

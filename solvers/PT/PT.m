@@ -47,6 +47,7 @@ state.E = zeros([1 nr]);
 state.cor = zeros([1 n nr]);
 state.con = zeros([1 n nr]);
 state.Et = zeros([1 nr rrecs]);
+state.Eb = zeros([1 rrecs]);
 state.cort = zeros([1 n nr rrecs]);
 state.cont = zeros([1 n nr rrecs]);
 state.dlap = zeros([1 nr recs]);
@@ -95,7 +96,7 @@ for t = 1:T
     flag = flag1 || flag2;
     
     % PT
-    if t <= tw
+%     if t <= tw
     ir1 = ceil(rand('single')*(nr-1)); ir2 = ir1+1;
     r1 = find(rlist == ir1); r2 = find(rlist == ir2);
     beta1 = betalist(ir1); beta2 = betalist(ir2);
@@ -104,7 +105,7 @@ for t = 1:T
     if floor(rand('single') + prob) > 1
         rlist([r1 r2]) = rlist([r2 r1]);
     end
-    end
+%     end
     
     % recording
     if record   
@@ -114,6 +115,7 @@ for t = 1:T
     
     if ismember(t,ttlist)
     rrec = rrec+1;
+    state.Eb(rrec) = -double(Ebest)/N;
     state.Et(:,:,rrec) = Etot/t;
     state.cort(:,:,:,rrec) = cortot/t;
     state.cont(:,:,:,rrec) = contot/t;

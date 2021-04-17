@@ -35,11 +35,6 @@ end
 end
 
 % monitor
-state = struct;
-tlist = unique(round(geoseries(1,(T-tw),10*round(log2(T-tw))))); recs = length(tlist);
-ttlist = unique(round(geoseries(1,(T),10*round(log2(T))))); rrecs = length(ttlist);
-v0 = vlist;
-
 E = zeros([1 2 nr]);
 cor = zeros([1 n nr]);
 con = zeros(1,n,nr);
@@ -47,10 +42,17 @@ Etot = zeros(1,2,nr);
 cortot = zeros(1,n,nr);
 contot = zeros(1,n,nr);
 
+if record
+state = struct;
+tlist = unique(round(geoseries(1,(T-tw),10*round(log2(T-tw))))); recs = length(tlist);
+ttlist = unique(round(geoseries(1,(T),10*round(log2(T))))); rrecs = length(ttlist);
+v0 = vlist;
+
 state.E = zeros(1,2,nr);
 state.cor = zeros(1,n,nr);
 state.con = zeros(1,n,nr);
 state.Et = zeros(1,2,nr,rrecs);
+state.Eb = zeros(1,rrecs);
 state.cort = zeros(1,n,nr,rrecs);
 state.cont = zeros(1,n,nr,rrecs);
 state.dlap = zeros(1,2,nr,recs);
@@ -60,6 +62,9 @@ state.qdist = zeros(1,2*N+1,nr);
 state.q2 = zeros(1,nr);
 state.q4 = zeros(1,nr);
 state.sclus = zeros(1,N,nr);
+else
+tw = 0; 
+end
 
 rec = 0; rrec = 0;
 for t = 1:T
@@ -92,8 +97,10 @@ for t = 1:T
     con(1,:,ir) = 0;
     end
     qq = round(q(ir)*N+N+1);
+    if record
     state.qdist(1,qq,ir) = state.qdist(1,qq,ir)+1;
     state.sclus(1,bg,ir) = state.sclus(1,bg,ir)+b;
+    end
     end
     contot = contot + con;
     [Ebest,flag2] = breakout(max(Elist(:)),Ebest,Esol,record);
@@ -116,6 +123,7 @@ for t = 1:T
         
     if ismember(t,ttlist)
     rrec = rrec+1;
+    state.Eb(rrec) = -double(Ebest)/N;
     state.Et(:,:,:,rrec) = Etot/t;
     state.cort(:,:,:,rrec) = cortot/t;
     state.cont(:,:,:,rrec) = contot/t;

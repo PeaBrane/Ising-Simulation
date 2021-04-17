@@ -1,17 +1,19 @@
-function var = tuning(vars0,varlb,varub,indices,falgo,sz,flist,fRBM,steps,runs,T,monitor,fSA,fAPX,gap)
+function var = tuning(vars0,varlb,varub,indices,falgo,sz,flist,fRBM,steps,runs,T,conf,monitor,fSA,fAPX,gap)
 
 ll = length(vars0);
 varc = vars0(setdiff(1:ll,indices));
 varv = vars0(indices);
 
-[falgo,algo,flist,fname] = get_suffix(falgo,sz,flist,fRBM);
+[falgo,~,flist,fname] = get_suffix(falgo,sz,flist,fRBM);
 fname = strcat('tune',fname,'.mat');
 quiet = monitor(1); fsave = monitor(3);
 
 if fAPX
-fun = @(var) approx(myinsert(varc,var,indices),falgo,sz,flist,fRBM,runs,T,gap);
+fun = @(var) approx(myinsert(varc,var,indices),falgo,sz,flist,fRBM,runs,T,conf,gap);
+elseif gap >= 0
+fun = @(var) mean(multiple(myinsert(varc,var,indices),falgo,sz,flist,fRBM,runs,T,conf));
 else
-fun = @(var) mean(multiple(myinsert(varc,var,indices),falgo,sz,flist,fRBM,runs,T));
+fun = @(var) log(mean(multiple(myinsert(varc,var,indices),falgo,sz,flist,fRBM,runs,T,conf))/prod(sz) - gap);
 end
 
 if fSA
