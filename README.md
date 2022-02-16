@@ -13,7 +13,11 @@ Other than the generation of RBM instances, I take no credit for the invention o
 
 Recent developments in using memory dynamics to simulate glasses are also included.
 
+## Contact
+
 **Email**: yrpei@ucsd.edu
+
+## Reference
 
 **The generation of RBM instances:**
 https://jmlr.org/papers/v21/19-368.html
