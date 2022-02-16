@@ -1,5 +1,10 @@
 # Ising-Simulation
 
+This repository is no longer under active development, but a more efficient and general python package
+for simulation of spin systems is currently planned.
+
+## Information
+
 This repository contains MATLAB implementations of standard algorithms for generating and simulating/solving Ising spin glass instances. The examples serve as a rough guideline on using the codes. 
 
 The generation algorithms include the frustrated loop instances and the 3D tiling cube instances. The simulation algorithms include single spin-flip updates, cluster updates (wolff and kbd), and replica exchange methods.
