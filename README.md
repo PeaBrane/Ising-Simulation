@@ -1,7 +1,7 @@
 # Ising-Simulation
 
-This repository is no longer under active development, but a more efficient and general python package
-for simulation of spin systems is currently planned.
+This repository is no longer maintained, and is currently being replaced by a more Pythonic framework:
+https://github.com/PeaBrane/peapods
 
 ## Information
 
